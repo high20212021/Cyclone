@@ -28,25 +28,53 @@
  *
 */
 
+namespace pocketmine\network\protocol;
 
-namespace pocketmine\network\protocol\types;
+#include <rules/DataPacket.h>
 
+class SetTitlePacket extends DataPacket{
 
-interface InventoryNetworkIds{
+	const NETWORK_ID = Info::SET_TITLE_PACKET;
 
-	const INVENTORY = -1;
-	const CONTAINER = 0;
-	const WORKBENCH = 1;
-	const FURNACE = 2;
-	const ENCHANTMENT = 3;
-	const BREWING_STAND = 4;
-	const ANVIL = 5;
-	const DISPENSER = 6;
-	const DROPPER = 7;
-	const HOPPER = 8;
-	const CAULDRON = 9;
-	const MINECART_CHEST = 10;
-	const MINECART_HOPPER = 11;
-	const HORSE = 12;
-	const BEACON = 13;
+	const TYPE_CLEAR = 0;
+	const TYPE_RESET = 1;
+	const TYPE_TITLE = 2;
+	const TYPE_SUB_TITLE = 3;
+	const TYPE_ACTION_BAR = 4;
+	const TYPE_TIMES = 5;
+	const TYPE_SET_ANIMATION_TIMES = 5;
+	const TYPE_SET_TITLE = 2;
+	const TYPE_SET_SUBTITLE = 3;
+	const TYPE_SET_ACTIONBAR_MESSAGE = 4;
+
+	public $type;
+	public $title;
+	public $fadeInDuration;
+	public $duration;
+	public $fadeOutDuration;
+
+	public function decode(){
+		$this->type = $this->getVarInt();
+		$this->title = $this->getString();
+		$this->fadeInDuration = $this->getVarInt();
+		$this->duration = $this->getVarInt();
+		$this->fadeOutDuration = $this->getVarInt();
+	}
+
+	public function encode(){
+		$this->reset();
+		$this->putVarInt($this->type);
+		$this->putString($this->title);
+		$this->putVarInt($this->fadeInDuration);
+		$this->putVarInt($this->duration);
+		$this->putVarInt($this->fadeOutDuration);
+	}
+
+	/**
+	 * @return PacketName|string
+     */
+	public function getName(){
+		return "SetTitlePacket";
+	}
+
 }

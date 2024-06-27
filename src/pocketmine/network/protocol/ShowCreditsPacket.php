@@ -23,22 +23,28 @@ namespace pocketmine\network\protocol;
 
 #include <rules/DataPacket.h>
 
-class InventoryActionPacket extends DataPacket{
-	const NETWORK_ID = Info::INVENTORY_ACTION_PACKET;
+class ShowCreditsPacket extends DataPacket{
 
-	public $uvarint0;
-	public $item;
-	public $varint1;
-	public $varint2;
+	const NETWORK_ID = Info::SHOW_CREDITS_PACKET;
+
+	public $eid;
+	public $type;
 
 	public function decode(){
 
 	}
 
 	public function encode(){
-		$this->putUnsignedVarInt($this->uvarint0);
-		$this->putSlot($this->item);
-		$this->putVarInt($this->varint1);
-		$this->putVarInt($this->varint2);
+		$this->reset();
+		$this->putEntityId($this->eid);
+		$this->putVarInt($this->type);
 	}
+
+	/**
+	 * @return PacketName|string
+     */
+	public function getName(){
+		return "ShowCreditsPacket";
+	}
+
 }
