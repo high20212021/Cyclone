@@ -366,7 +366,8 @@ class Server{
 	 * @return string
 	 */
 	public function getVersion(){
-		return ProtocolInfo::MINECRAFT_VERSION;
+		$version = implode(",",ProtocolInfo::MINECRAFT_VERSION);
+		return $version;
 	}
 
 	/**
@@ -1446,7 +1447,8 @@ class Server{
 
 	§3Cyclone§f is a custom version of §bGenisys§f, modified by §5Sunch233§f
 	Version: §6' . $this->getPocketMineVersion() . '§f
-	Target client version: §b' . ProtocolInfo::MINECRAFT_VERSION . '§f
+	Target client version: §b' . $this->getVersion() . '§f
+	PHP: §e' . PHP_VERSION . '§f
 	Source code: §dhttps://github.com/Sunch233/Cyclone§f
 	';
 	
