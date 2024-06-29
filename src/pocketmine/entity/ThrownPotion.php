@@ -23,11 +23,13 @@ namespace pocketmine\entity;
 
 use pocketmine\item\Potion;
 use pocketmine\level\Level;
+use pocketmine\level\particle\ItemBreakParticle;
 use pocketmine\level\particle\SpellParticle;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ShortTag;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
+use pocketmine\item\Item;
 
 class ThrownPotion extends Projectile{
 	const NETWORK_ID = 86;
@@ -60,6 +62,7 @@ class ThrownPotion extends Projectile{
 
 	public function splash(){
 		if(!$this->hasSplashed){
+			$this->getLevel()->addParticle(new ItemBreakParticle($this, Item::get(Item::SPLASH_POTION)));
 			$this->hasSplashed = true;
 			$color = Potion::getColor($this->getPotionId());
 			$this->getLevel()->addParticle(new SpellParticle($this, $color[0], $color[1], $color[2]));
