@@ -111,11 +111,6 @@ namespace pocketmine {
 	}
 	require_once($bootstrap);
 
-	if(!class_exists("ClassLoader", false)){
-		require_once(\pocketmine\PATH . "src/spl/ClassLoader.php");
-		require_once(\pocketmine\PATH . "src/spl/BaseClassLoader.php");
-	}
-
 	$autoloader = new \BaseClassLoader();
 	$autoloader->addPath(\pocketmine\PATH . "src");
 	$autoloader->addPath(\pocketmine\PATH . "src" . DIRECTORY_SEPARATOR . "spl");

@@ -4,8 +4,178 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9e10842bc94d1fca3458a92034fbb186",
-    "packages": [],
+    "content-hash": "49787d9d9a728fcd390a1bafe4030c87",
+    "packages": [
+        {
+            "name": "pocketmine/classloader",
+            "version": "0.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pmmp/ClassLoader.git",
+                "reference": "3c484a27787f7732ce842ed694928a29ba340961"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pmmp/ClassLoader/zipball/3c484a27787f7732ce842ed694928a29ba340961",
+                "reference": "3c484a27787f7732ce842ed694928a29ba340961",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pthreads": "~3.2.0 || ^4.0",
+                "ext-reflection": "*",
+                "php": "^7.2 || ^8.0"
+            },
+            "conflict": {
+                "pocketmine/spl": "<0.4"
+            },
+            "require-dev": {
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "0.12.99",
+                "phpstan/phpstan-strict-rules": "^0.12.4"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "./src"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "description": "Ad-hoc autoloading components used by PocketMine-MP",
+            "support": {
+                "issues": "https://github.com/pmmp/ClassLoader/issues",
+                "source": "https://github.com/pmmp/ClassLoader/tree/0.1.3"
+            },
+            "abandoned": "pocketmine/pocketmine-mp",
+            "time": "2021-11-01T20:13:55+00:00"
+        },
+        {
+            "name": "pocketmine/log",
+            "version": "0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pmmp/Log.git",
+                "reference": "830b44a2cf96ef703c550abe64302f230231ca49"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pmmp/Log/zipball/830b44a2cf96ef703c550abe64302f230231ca49",
+                "reference": "830b44a2cf96ef703c550abe64302f230231ca49",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2 || ^8.0"
+            },
+            "conflict": {
+                "pocketmine/spl": "<0.4"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "0.12.67",
+                "phpstan/phpstan-strict-rules": "^0.12.2"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "./src"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "description": "Logging components used by PocketMine-MP and related projects",
+            "support": {
+                "issues": "https://github.com/pmmp/Log/issues",
+                "source": "https://github.com/pmmp/Log/tree/0.2.1"
+            },
+            "time": "2021-01-15T14:32:41+00:00"
+        },
+        {
+            "name": "pocketmine/log-pthreads",
+            "version": "0.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pmmp/LogPthreads.git",
+                "reference": "01620c3628cdaa6b4a21122cff4c5d2f70b5c1d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pmmp/LogPthreads/zipball/01620c3628cdaa6b4a21122cff4c5d2f70b5c1d3",
+                "reference": "01620c3628cdaa6b4a21122cff4c5d2f70b5c1d3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pthreads": "~3.2.0 || ^4.0",
+                "php": "^7.2 || ^8.0",
+                "pocketmine/log": "^0.2.0"
+            },
+            "conflict": {
+                "pocketmine/spl": "<0.4"
+            },
+            "require-dev": {
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "0.12.80",
+                "phpstan/phpstan-strict-rules": "^0.12.4"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "./src"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "description": "Logging components specialized for pthreads used by PocketMine-MP and related projects",
+            "support": {
+                "issues": "https://github.com/pmmp/LogPthreads/issues",
+                "source": "https://github.com/pmmp/LogPthreads/tree/0.1.4"
+            },
+            "abandoned": "pocketmine/pocketmine-mp",
+            "time": "2021-11-01T20:36:53+00:00"
+        },
+        {
+            "name": "pocketmine/spl",
+            "version": "0.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pmmp/SPL.git",
+                "reference": "6b08b7cf8c4afa17139c9a1b3bf1b408531de161"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pmmp/SPL/zipball/6b08b7cf8c4afa17139c9a1b3bf1b408531de161",
+                "reference": "6b08b7cf8c4afa17139c9a1b3bf1b408531de161",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2 || ^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12.8"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "./src"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "description": "Standard library files required by PocketMine-MP and related projects",
+            "support": {
+                "issues": "https://github.com/pmmp/SPL/issues",
+                "source": "https://github.com/pmmp/SPL/tree/0.4.2"
+            },
+            "abandoned": true,
+            "time": "2021-01-15T15:15:23+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "phpstan/phpstan",
