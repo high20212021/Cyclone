@@ -501,7 +501,7 @@ namespace pocketmine {
 	$logger->shutdown();
 	$logger->join();
 
-	echo Terminal::$FORMAT_RESET . PHP_EOL;
+	echo "Server has stopped" . Terminal::$FORMAT_RESET . PHP_EOL;
 
 	if($erroredThreads > 0){
 		if(\pocketmine\DEBUG > 1){
