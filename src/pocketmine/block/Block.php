@@ -200,7 +200,6 @@ class Block extends Position implements BlockIds, Metadatable{
 			self::$list[self::SPRUCE_WOOD_STAIRS] = SpruceWoodStairs::class;
 			self::$list[self::BIRCH_WOOD_STAIRS] = BirchWoodStairs::class;
 			self::$list[self::JUNGLE_WOOD_STAIRS] = JungleWoodStairs::class;
-			self::$list[self::BEACON] = Beacon::class;
 			self::$list[self::STONE_WALL] = StoneWall::class;
 
 			self::$list[self::FLOWER_POT_BLOCK] = FlowerPot::class;
@@ -284,6 +283,12 @@ class Block extends Position implements BlockIds, Metadatable{
 			self::$list[self::CAULDRON_BLOCK] = Cauldron::class;
 			self::$list[self::INVISIBLE_BEDROCK] = InvisibleBedrock::class;
 			self::$list[self::HOPPER_BLOCK] = Hopper::class;
+			//Cyclone
+			self::$list[self::BEACON] = Beacon::class;
+			self::$list[self::PURPUR_BLOCK] = Purpur::class;
+			self::$list[self::PURPUR_STAIRS] = PurpurStairs::class;
+			self::$list[self::CHORUS_FLOWER] = ChorusFlower::class;
+			self::$list[self::CHORUS_PLANT] = ChorusPlant::class;
 
 			foreach(self::$list as $id => $class){
 				if($class !== null){

@@ -249,7 +249,9 @@ class Item implements ItemIds, \JsonSerializable{
 			self::$list[self::PRISMARINE_SHARD] = PrismarineShard::class;
 			self::$list[self::NETHER_STAR] = NetherStar::class;
 			self::$list[self::FISHING_ROD] = FishingRod::class;
+			//Cyclone
 			self::$list[self::BEACON] = Beacon::class;
+
 
 			for($i = 0; $i < 256; ++$i){
 				if(Block::$list[$i] !== null){

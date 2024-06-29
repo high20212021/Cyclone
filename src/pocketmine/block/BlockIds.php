@@ -19,6 +19,8 @@
  *
 */
 
+declare(strict_types=1);
+
 namespace pocketmine\block;
 
 interface BlockIds{
@@ -219,6 +221,13 @@ interface BlockIds{
 	public const DARK_OAK_DOOR_BLOCK = 197;
 	public const GRASS_PATH = 198;
 	public const ITEM_FRAME_BLOCK = 199;
+	public const CHORUS_FLOWER = 200;
+
+	public const PURPUR_BLOCK = 201, PURPUR = 201;
+
+	public const PURPUR_STAIRS = 203;
+
+	public const CHORUS_PLANT = 240;
 
 	public const PODZOL = 243;
 	public const BEETROOT_BLOCK = 244;
