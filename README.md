@@ -15,6 +15,7 @@ Cyclone is a fork of **[iTXTech/Genisys](https://github.com/iTXTech/Genisys)** .
 
 ## Discussion
 QQ group:655916398
+
 discord: Sunch233#3226
 
 ## Licensing information
