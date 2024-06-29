@@ -26,6 +26,10 @@ use pocketmine\item\Potion;
 use pocketmine\level\Level;
 use pocketmine\level\particle\SpellParticle;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\DoubleTag;
+use pocketmine\nbt\tag\FloatTag;
+use pocketmine\nbt\tag\IntTag;
+use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\ShortTag;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
@@ -65,7 +69,42 @@ class LingeringPotion extends Projectile{
 			$this->hasSplashed = true;
 			$this->getLevel()->addParticle(new ItemBreakParticle($this, Item::get(Item::SPLASH_POTION)));
 
-			//TODO
+			$aec = null;
+
+			$nbt = new CompoundTag("", [
+				new ListTag("Pos", [
+					new DoubleTag("", $this->getX()),
+					new DoubleTag("", $this->getY()),
+					new DoubleTag("", $this->getZ()),
+				]),
+				new ListTag("Motion", [
+					new DoubleTag("", 0),
+					new DoubleTag("", 0),
+					new DoubleTag("", 0),
+				]),
+				new ListTag("Rotation", [
+					new FloatTag("", 0),
+					new FloatTag("", 0),
+				]),
+
+				new IntTag(AreaEffectCloud::TAG_AGE, 0),
+				new ShortTag(AreaEffectCloud::TAG_POTION_ID, $this->getPotionId()),
+				new FloatTag(AreaEffectCloud::TAG_RADIUS, 3),
+				new FloatTag(AreaEffectCloud::TAG_RADIUS_ON_USE, -0.5),
+				new FloatTag(AreaEffectCloud::TAG_RADIUS_PER_TICK, -0.005),
+				new IntTag(AreaEffectCloud::TAG_WAIT_TIME, 10),
+				new IntTag(AreaEffectCloud::TAG_TILE_X, intval(round($this->getX()))),
+				new IntTag(AreaEffectCloud::TAG_TILE_Y, intval(round($this->getY()))),
+				new IntTag(AreaEffectCloud::TAG_TILE_Z, intval(round($this->getZ()))),
+				new IntTag(AreaEffectCloud::TAG_DURATION, 600),
+				new IntTag(AreaEffectCloud::TAG_DURATION_ON_USE, 0),
+			]);
+
+			$aec = Entity::createEntity("AreaEffectCloud", $this->getLevel(), $nbt);
+			if($aec instanceof Entity){
+				var_dump("spawnToAll");
+				$aec->spawnToAll();
+			}
 
 			$this->kill();
 		}
