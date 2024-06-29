@@ -63,7 +63,7 @@ class BinaryStream extends \stdClass{
 			return $str;
 		}
 
-		return $len === 1 ? $this->buffer{$this->offset++} : substr($this->buffer, ($this->offset += $len) - $len, $len);
+		return $len === 1 ? $this->buffer[$this->offset++] : substr($this->buffer, ($this->offset += $len) - $len, $len);
 	}
 
 	public function put($str){
@@ -169,7 +169,7 @@ class BinaryStream extends \stdClass{
 	}
 
 	public function getByte(){
-		return ord($this->buffer{$this->offset++});
+		return ord($this->buffer[$this->offset++]);
 	}
 
 	public function putByte($v){
@@ -296,6 +296,6 @@ class BinaryStream extends \stdClass{
 	}
 
 	public function feof(){
-		return !isset($this->buffer{$this->offset});
+		return !isset($this->buffer[$this->offset]);
 	}
 }
