@@ -251,6 +251,7 @@ class Item implements ItemIds, \JsonSerializable{
 			self::$list[self::FISHING_ROD] = FishingRod::class;
 			//Cyclone
 			self::$list[self::BEACON] = Beacon::class;
+			self::$list[self::LINGERING_POTION] = LingeringPotion::class;
 
 
 			for($i = 0; $i < 256; ++$i){

@@ -2409,6 +2409,18 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 								}
 							}
 							break;
+						case Item::LINGERING_POTION:
+							if($this->server->allowSplashPotion){
+								$f = 1.1;
+								$nbt["PotionId"] = new ShortTag("PotionId", $item->getDamage());
+								$entity = Entity::createEntity("LingeringPotion", $this->getLevel(), $nbt, $this);
+								$entity->setMotion($entity->getMotion()->multiply($f));
+								$this->server->getPluginManager()->callEvent($ev = new ProjectileLaunchEvent($entity));
+								if($ev->isCancelled()){
+									$entity->kill();
+								}
+							}
+							break;
 						case Item::ENDER_PEARL:
 							if(floor(($time = microtime(true)) - $this->lastEnderPearlUse) >= 1){
 								$f = 1.1;

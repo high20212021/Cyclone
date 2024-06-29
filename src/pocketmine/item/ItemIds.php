@@ -201,6 +201,7 @@ interface ItemIds extends BlockIds{
 	public const JUNGLE_DOOR = 429;
 	public const ACACIA_DOOR = 430;
 	public const DARK_OAK_DOOR = 431;
+	public const CHORUS_FRUIT = 432;
 
 	public const SPLASH_POTION = 438;
 
