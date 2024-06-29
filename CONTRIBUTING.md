@@ -1,8 +1,8 @@
-# Genisys Contribution Guidelines
+# Cyclone Contribution Guidelines
 
 ### Questions
 
-No questions on GitHub. Consider one of our [chats](https://github.com/iTXTech/Genisys#discussion).  
+No questions on GitHub. Consider one of our chats(QQ).  
 Channel rule: **Don't ask to ask, if anyone is here or alive, or uses something. Just ask, and we'll get moving along. Thanks.**
 
 ### Issues
