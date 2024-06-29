@@ -89,6 +89,7 @@ namespace pocketmine {
 	}else{
 		@define('pocketmine\PATH', \getcwd() . DIRECTORY_SEPARATOR);
 	}
+	define('pocketmine\COMPOSER_AUTOLOADER_PATH', dirname(__DIR__, 2) . '/vendor/autoload.php');
 
 	if(version_compare("8.0", PHP_VERSION) > 0){
 		echo "[CRITICAL] You must use PHP >= 8.0" . PHP_EOL;
@@ -102,6 +103,14 @@ namespace pocketmine {
 		exit(1);
 	}
 
+	$bootstrap = COMPOSER_AUTOLOADER_PATH;
+	if(!is_file($bootstrap)){
+		echo "[CRITICAL] Composer autoloader not found at " . $bootstrap;
+		echo "[CRITICAL] Please install/update Composer dependencies or use provided builds.";
+		exit(1);
+	}
+	require_once($bootstrap);
+
 	if(!class_exists("ClassLoader", false)){
 		require_once(\pocketmine\PATH . "src/spl/ClassLoader.php");
 		require_once(\pocketmine\PATH . "src/spl/BaseClassLoader.php");
@@ -110,7 +119,7 @@ namespace pocketmine {
 	$autoloader = new \BaseClassLoader();
 	$autoloader->addPath(\pocketmine\PATH . "src");
 	$autoloader->addPath(\pocketmine\PATH . "src" . DIRECTORY_SEPARATOR . "spl");
-	$autoloader->register(true);
+	$autoloader->register(false);
 
 
 	set_time_limit(0); //Who set it to 30 seconds?!?!

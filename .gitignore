@@ -1,7 +1,7 @@
 players/*
 worlds/*
 plugins/*
-bin/*
+bin*/*
 timings/*
 *.log
 *.phar
@@ -10,6 +10,9 @@ server.properties
 *.txt
 genisys.yml
 crashdumps/*
+memory_dumps/*
+server.lock
+/phpstan.neon
 
 # Common IDEs
 .idea/
@@ -29,3 +32,6 @@ Desktop.ini
 /docs/build/
 !/docs/requirements.txt
 .project
+
+# Composer
+vendor/*
