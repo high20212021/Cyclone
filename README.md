@@ -9,7 +9,9 @@ Cyclone is a fork of **[iTXTech/Genisys](https://github.com/iTXTech/Genisys)** .
 
 -------------
 ## Finished & Planned New things:
- - fully API3.0.0
+ - [x] all Genisys feature
+ - [ ] fully API3.0.0
+ - [x] muti-version 1.0.5-1.0.9
 
 ## Licensing information
 
