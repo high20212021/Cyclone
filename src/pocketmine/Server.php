@@ -1442,19 +1442,6 @@ class Server{
 		}, $microseconds);
 	}
 
-	public function about(){
-		$string = '
-
-	§3Cyclone§f is a custom version of §bGenisys§f, modified by §5Sunch233§f
-	Version: §6' . $this->getPocketMineVersion() . '§f
-	Target client version: §b' . $this->getVersion() . '§f
-	PHP: §e' . PHP_VERSION . '§f
-	Source code: §dhttps://github.com/Sunch233/Cyclone§f
-	';
-	
-		$this->getLogger()->info($string);
-	}
-
 	public function loadAdvancedConfig(){
 		$this->playerMsgType = $this->getAdvancedProperty("server.player-msg-type", self::PLAYER_MSG_TYPE_MESSAGE);
 		$this->playerLoginMsg = $this->getAdvancedProperty("server.login-msg", "§3@player joined the game");
@@ -1585,7 +1572,21 @@ class Server{
 			$version = new VersionString($this->getPocketMineVersion());
 			$this->version = $version;
 
-			$this->about();
+			$aboutstring = '
+       ____           _                  
+      / ___|   _  ___| | ___  _ __   ___ 
+     | |  | | | |/ __| |/ _ \|  _ \ / _ \
+     | |__| |_| | (__| | (_) | | | |  __/
+      \____\__, |\___|_|\___/|_| |_|\___|
+           |___/     
+      §aCyclone§f is a custom version of §bGenisys§f.
+      §bVERSION: §6' . VERSION . ' (API ' . $this->getApiVersion() . ')
+      §fPHP: §e' . PHP_VERSION . " " . (PHP_INT_SIZE * 8) . 'bit
+      §cAuthor：Sunch233
+      §6QQ Group: 684977637
+			';
+
+			$this->logger->info($aboutstring);
 
 			$this->logger->info("Loading properties and configuration...");
 			if(!file_exists($this->dataPath . "pocketmine.yml")){
