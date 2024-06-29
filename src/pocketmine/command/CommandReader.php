@@ -1,30 +1,29 @@
 <?php
 
 /*
- *
- *  ____            _        _   __  __ _                  __  __ ____
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
- * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
+ *      ____           _
+ *     / ___|   _  ___| | ___  _ __   ___
+ *    | |  | | | |/ __| |/ _ \|  _ \ / _ \
+ *    | |__| |_| | (__| | (_) | | | |  __/
+ *     \____\__, |\___|_|\___/|_| |_|\___|
+ *          |___/
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @author PocketMine Team
- * @link http://www.pocketmine.net/
- *
+ * @author Sunch233
+ * @link https://github.com/Sunch233/Cyclone
  *
 */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace pocketmine\command;
 
+use pocketmine\snooze\SleeperNotifier;
 use pocketmine\Thread;
-
 
 class CommandReader extends Thread{
 
@@ -38,8 +37,15 @@ class CommandReader extends Thread{
 
 	private $type = self::TYPE_STREAM;
 
-	public function __construct(){
+	/** @var SleeperNotifier|null */
+	private $notifier;
+
+	/**
+	 * CommandReader constructor.
+	 */
+	public function __construct(?SleeperNotifier $notifier = null){
 		$this->buffer = new \Threaded;
+		$this->notifier = $notifier;
 
 		$opts = getopt("", ["disable-readline"]);
 		if((extension_loaded("readline") and !isset($opts["disable-readline"]) and !$this->isPipe(STDIN))){
@@ -63,13 +69,6 @@ class CommandReader extends Thread{
 				return;
 			}
 		}
-
-		$message = "Thread blocked for unknown reason";
-		if($this->type === self::TYPE_PIPED){
-			$message = "STDIN is being piped from another location and the pipe is blocked, cannot stop safely";
-		}
-
-		throw new \ThreadException($message);
 	}
 
 	private function initStdin(){
@@ -91,9 +90,10 @@ class CommandReader extends Thread{
 	 * Checks if the specified stream is a FIFO pipe.
 	 *
 	 * @param resource $stream
+	 *
 	 * @return bool
 	 */
-	private function isPipe($stream) : bool{
+	private function isPipe($stream): bool{
 		return is_resource($stream) and ((function_exists("posix_isatty") and !posix_isatty($stream)) or ((fstat($stream)["mode"] & 0170000) === 0010000));
 	}
 
@@ -102,7 +102,7 @@ class CommandReader extends Thread{
 	 *
 	 * @return bool if the main execution should continue reading lines
 	 */
-	private function readLine() : bool{
+	private function readLine(): bool{
 		$line = "";
 		if($this->type === self::TYPE_READLINE){
 			$line = trim(readline("> "));
@@ -121,6 +121,7 @@ class CommandReader extends Thread{
 			switch($this->type){
 				case self::TYPE_STREAM:
 					$r = [$stdin];
+					$w = $e = null;
 					if(($count = stream_select($r, $w, $e, 0, 200000)) === 0){ //nothing changed in 200000 microseconds
 						return true;
 					}elseif($count === false){ //stream error
@@ -137,7 +138,7 @@ class CommandReader extends Thread{
 				case self::TYPE_PIPED:
 					if(($raw = fgets($stdin)) === false){ //broken pipe or EOF
 						$this->initStdin();
-						$this->synchronized(function(){
+						$this->synchronized(function (){
 							$this->wait(200000);
 						}); //prevent CPU waste if it's end of pipe
 						return true; //loop back round
@@ -150,6 +151,9 @@ class CommandReader extends Thread{
 
 		if($line !== ""){
 			$this->buffer[] = preg_replace("#\\x1b\\x5b([^\\x1b]*\\x7e|[\\x40-\\x50])#", "", $line);
+			if($this->notifier !== null){
+				$this->notifier->wakeupSleeper();
+			}
 		}
 
 		return true;
@@ -173,7 +177,7 @@ class CommandReader extends Thread{
 			$this->initStdin();
 		}
 
-		while(!$this->shutdown and $this->readLine());
+		while(!$this->shutdown and $this->readLine()) ;
 
 		if($this->type !== self::TYPE_READLINE){
 			global $stdin;
@@ -182,6 +186,9 @@ class CommandReader extends Thread{
 
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getThreadName(){
 		return "Console";
 	}
