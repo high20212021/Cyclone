@@ -24,6 +24,7 @@ namespace pocketmine;
 use pocketmine\network\protocol\Info;
 use pocketmine\plugin\PluginBase;
 use pocketmine\plugin\PluginLoadOrder;
+use pocketmine\utils\Filesystem;
 use pocketmine\utils\Utils;
 use pocketmine\utils\VersionString;
 use raklib\RakLib;
@@ -166,7 +167,7 @@ class CrashDump{
 				E_USER_DEPRECATED => "E_USER_DEPRECATED",
 			];
 			$error["fullFile"] = $error["file"];
-			$error["file"] = cleanPath($error["file"]);
+			$error["file"] = Filesystem::cleanPath($error["file"]);
 			$error["type"] = isset($errorConversion[$error["type"]]) ? $errorConversion[$error["type"]] : $error["type"];
 			if(($pos = strpos($error["message"], "\n")) !== false){
 				$error["message"] = substr($error["message"], 0, $pos);
@@ -194,7 +195,7 @@ class CrashDump{
 			$file = $reflection->getProperty("file");
 			$file->setAccessible(true);
 			foreach($this->server->getPluginManager()->getPlugins() as $plugin){
-				$filePath = \pocketmine\cleanPath($file->getValue($plugin));
+				$filePath = Filesystem::cleanPath(($file->getValue($plugin)));
 				if(strpos($error["file"], $filePath) === 0){
 					$this->data["plugin"] = $plugin->getName();
 					$this->addLine("BAD PLUGIN : " . $plugin->getDescription()->getFullName());

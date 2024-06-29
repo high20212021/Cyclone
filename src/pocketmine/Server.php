@@ -99,6 +99,7 @@ use pocketmine\tile\Tile;
 use pocketmine\utils\Binary;
 use pocketmine\utils\Color;
 use pocketmine\utils\Config;
+use pocketmine\utils\Filesystem;
 use pocketmine\utils\MainLogger;
 use pocketmine\utils\ServerException;
 use pocketmine\utils\Terminal;
@@ -2303,7 +2304,7 @@ class Server{
 			$errstr = substr($errstr, 0, $pos);
 		}
 
-		$errfile = cleanPath($errfile);
+		$errfile = Filesystem::cleanPath(($errfile));
 
 		if($this->logger instanceof MainLogger){
 			$this->logger->logException($e, $trace);
