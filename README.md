@@ -13,6 +13,7 @@ Cyclone is a fork of **[iTXTech/Genisys](https://github.com/iTXTech/Genisys)** .
  - [x] muti-version 1.0.5-1.0.9
  - [x] PHP8 support
  - [x] better fishing
+ - [x] beacon
 
 ## Discussion
 QQ group:655916398
