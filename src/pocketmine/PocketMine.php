@@ -91,8 +91,8 @@ namespace pocketmine {
 	}
 	define('pocketmine\COMPOSER_AUTOLOADER_PATH', dirname(__DIR__, 2) . '/vendor/autoload.php');
 
-	if(version_compare("8.0", PHP_VERSION) > 0){
-		echo "[CRITICAL] You must use PHP >= 8.0" . PHP_EOL;
+	if(version_compare("8.1", PHP_VERSION) > 0){
+		echo "[CRITICAL] You must use PHP >= 8.1" . PHP_EOL;
 		echo "[CRITICAL] Please use the installer provided on the homepage." . PHP_EOL;
 		exit(1);
 	}
@@ -120,7 +120,7 @@ namespace pocketmine {
 	set_time_limit(0); //Who set it to 30 seconds?!?!
 
 	gc_enable();
-	error_reporting(-1);
+	error_reporting(E_ALL ^ E_DEPRECATED); //TODO
 	ini_set("allow_url_fopen", 1);
 	ini_set("display_errors", 1);
 	ini_set("display_startup_errors", 1);

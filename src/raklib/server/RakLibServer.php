@@ -141,42 +141,42 @@ class RakLibServer extends \Thread{
 		}
 	}
 
-	public function errorHandler($errno, $errstr, $errfile, $errline, $context, $trace = null){
-		if(error_reporting() === 0){
-			return false;
-		}
-		$errorConversion = [
-			E_ERROR => "E_ERROR",
-			E_WARNING => "E_WARNING",
-			E_PARSE => "E_PARSE",
-			E_NOTICE => "E_NOTICE",
-			E_CORE_ERROR => "E_CORE_ERROR",
-			E_CORE_WARNING => "E_CORE_WARNING",
-			E_COMPILE_ERROR => "E_COMPILE_ERROR",
-			E_COMPILE_WARNING => "E_COMPILE_WARNING",
-			E_USER_ERROR => "E_USER_ERROR",
-			E_USER_WARNING => "E_USER_WARNING",
-			E_USER_NOTICE => "E_USER_NOTICE",
-			E_STRICT => "E_STRICT",
-			E_RECOVERABLE_ERROR => "E_RECOVERABLE_ERROR",
-			E_DEPRECATED => "E_DEPRECATED",
-			E_USER_DEPRECATED => "E_USER_DEPRECATED",
-		];
-		$errno = isset($errorConversion[$errno]) ? $errorConversion[$errno] : $errno;
-		if(($pos = strpos($errstr, "\n")) !== false){
-			$errstr = substr($errstr, 0, $pos);
-		}
+    public function errorHandler($errno, $errstr, $errfile, $errline){
+        if((error_reporting() & $errno) === 0){
+            return false;
+        }
 
-		$errfile = $this->cleanPath($errfile);
+        $errorConversion = [
+            E_ERROR => "E_ERROR",
+            E_WARNING => "E_WARNING",
+            E_PARSE => "E_PARSE",
+            E_NOTICE => "E_NOTICE",
+            E_CORE_ERROR => "E_CORE_ERROR",
+            E_CORE_WARNING => "E_CORE_WARNING",
+            E_COMPILE_ERROR => "E_COMPILE_ERROR",
+            E_COMPILE_WARNING => "E_COMPILE_WARNING",
+            E_USER_ERROR => "E_USER_ERROR",
+            E_USER_WARNING => "E_USER_WARNING",
+            E_USER_NOTICE => "E_USER_NOTICE",
+            E_STRICT => "E_STRICT",
+            E_RECOVERABLE_ERROR => "E_RECOVERABLE_ERROR",
+            E_DEPRECATED => "E_DEPRECATED",
+            E_USER_DEPRECATED => "E_USER_DEPRECATED"
+        ];
 
-		$this->getLogger()->debug("An $errno error happened: \"$errstr\" in \"$errfile\" at line $errline");
+        $errno = $errorConversion[$errno] ?? $errno;
 
-		foreach(($trace = $this->getTrace($trace === null ? 3 : 0, $trace)) as $i => $line){
-			$this->getLogger()->debug($line);
-		}
+        $errstr = preg_replace('/\s+/', ' ', trim($errstr));
+        $errfile = $this->cleanPath($errfile);
 
-		return true;
-	}
+        $this->getLogger()->debug("An $errno error happened: \"$errstr\" in \"$errfile\" at line $errline");
+
+        foreach($this->getTrace(2) as $i => $line){
+            $this->getLogger()->debug($line);
+        }
+
+        return true;
+    }
 
 	public function getTrace($start = 1, $trace = null){
 		if($trace === null){

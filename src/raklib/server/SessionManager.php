@@ -253,7 +253,13 @@ class SessionManager{
 	}
 
 	public function receiveStream(){
-		if(strlen($packet = $this->server->readMainToThreadPacket()) > 0){
+		$packet = $this->server->readMainToThreadPacket();
+
+		if($packet === null){
+			return false; //no data
+		}
+
+		if(strlen($packet) > 0){
 			$id = ord($packet[0]);
 			$offset = 1;
 			if($id === RakLib::PACKET_ENCAPSULATED){

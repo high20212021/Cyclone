@@ -108,8 +108,8 @@ class Normal extends Generator{
 		return [];
 	}
 
-	public function pickBiome($x, $z){
-		$hash = $x * 2345803 ^ $z * 9236449 ^ $this->level->getSeed();
+	public function pickBiome(int $x,int $z){
+		$hash = $x * 2345803 ^ $z * 9236449 ^ (int)$this->level->getSeed();
 		$hash *= $hash + 223;
 		$xNoise = $hash >> 20 & 3;
 		$zNoise = $hash >> 22 & 3;
@@ -122,7 +122,6 @@ class Normal extends Generator{
 
 		return $this->selector->pickBiome($x + $xNoise - 1, $z + $zNoise - 1);
 	}
-
 	public function init(ChunkManager $level, Random $random){
 		$this->level = $level;
 		$this->random = $random;
