@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "49787d9d9a728fcd390a1bafe4030c87",
+    "content-hash": "bef5e5978f583d1368800dffecc6f1da",
     "packages": [
         {
             "name": "pocketmine/classloader",
@@ -136,6 +136,46 @@
             },
             "abandoned": "pocketmine/pocketmine-mp",
             "time": "2021-11-01T20:36:53+00:00"
+        },
+        {
+            "name": "pocketmine/snooze",
+            "version": "0.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pmmp/Snooze.git",
+                "reference": "0ac8fc2a781c419a1f64ebca4d5835028f59e29b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pmmp/Snooze/zipball/0ac8fc2a781c419a1f64ebca4d5835028f59e29b",
+                "reference": "0ac8fc2a781c419a1f64ebca4d5835028f59e29b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pthreads": "~3.2.0 || ^4.0",
+                "php-64bit": "^7.3 || ^8.0"
+            },
+            "require-dev": {
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "0.12.99",
+                "phpstan/phpstan-strict-rules": "^0.12.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "pocketmine\\snooze\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "description": "Thread notification management library for code using the pthreads extension",
+            "support": {
+                "issues": "https://github.com/pmmp/Snooze/issues",
+                "source": "https://github.com/pmmp/Snooze/tree/0.3.1"
+            },
+            "time": "2021-11-01T20:50:08+00:00"
         },
         {
             "name": "pocketmine/spl",

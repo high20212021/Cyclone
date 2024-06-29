@@ -94,6 +94,7 @@ use pocketmine\scheduler\DServerTask;
 use pocketmine\scheduler\FileWriteTask;
 use pocketmine\scheduler\SendUsageTask;
 use pocketmine\scheduler\ServerScheduler;
+use pocketmine\snooze\SleeperHandler;
 use pocketmine\tile\Tile;
 use pocketmine\utils\Binary;
 use pocketmine\utils\Color;
@@ -122,6 +123,9 @@ class Server{
 
 	/** @var \Threaded */
 	private static $sleeper = null;
+
+	/** @var SleeperHandler */
+	private $tickSleeper;
 
 	/** @var BanList */
 	private $banByName = null;
@@ -1544,6 +1548,7 @@ class Server{
 	public function __construct(\ClassLoader $autoloader, \ThreadedLogger $logger, $filePath, $dataPath, $pluginPath, $defaultLang = "unknown"){
 		self::$instance = $this;
 		self::$sleeper = new \Threaded;
+		$this->tickSleeper = new SleeperHandler();
 		$this->autoloader = $autoloader;
 		$this->logger = $logger;
 		$this->filePath = $filePath;
@@ -2384,14 +2389,15 @@ class Server{
 		return [];
 	}
 
+	public function getTickSleeper() : SleeperHandler{
+		return $this->tickSleeper;
+	}
+
 	private function tickProcessor(){
 		$this->nextTick = microtime(true);
 		while($this->isRunning){
 			$this->tick();
-			$next = $this->nextTick - 0.0001;
-			if($next > microtime(true)){
-				@time_sleep_until($next);
-			}
+			$this->tickSleeper->sleepUntil($this->nextTick);
 		}
 	}
 
