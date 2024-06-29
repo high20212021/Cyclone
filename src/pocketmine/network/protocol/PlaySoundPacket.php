@@ -37,26 +37,26 @@ class PlaySoundPacket extends DataPacket{
 
 	const NETWORK_ID = Info::PLAY_SOUND_PACKET;
 
-	public $unknown;
+	public $soundName;
 	public $x;
 	public $y;
 	public $z;
-	public $unknown1;
-	public $unknown2;
+	public $volume;
+	public $pitch;
 
 	public function decode(){
-		$this->unknown = $this->getString();
+		$this->soundName = $this->getString();
 		$this->getBlockCoords($this->x, $this->y, $this->z); //Not sure if it's BlockCoords
-		$this->unknown1 = $this->getFloat();
-		$this->unknown2 = $this->getFloat();
+		$this->volume = $this->getFloat();
+		$this->pitch = $this->getFloat();
 	}
 
 	public function encode(){
 		$this->reset();
-		$this->putString($this->unknown);
+		$this->putString($this->soundName);
 		$this->putBlockCoords($this->x, $this->y, $this->z); //Not sure if it's BlockCoords
-		$this->putFloat($this->unknown1);
-		$this->putFloat($this->unknown2);
+		$this->putFloat($this->volume);
+		$this->putFloat($this->pitch);
 	}
 
 	/**
