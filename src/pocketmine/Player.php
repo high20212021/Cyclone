@@ -2367,9 +2367,12 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 									$f = 0.6;
 									$entity = Entity::createEntity("FishingHook", $this->getLevel(), $nbt, $this);
 									$entity->setMotion($entity->getMotion()->multiply($f));
+									$this->setFishingHook($entity);
+								}else{
+									$this->fishingHook->reelLine();
+									$this->setFishingHook();
 								}
 							}
-							$this->setFishingHook($entity);
 							$reduceCount = false;
 							break;
 						case Item::SNOWBALL:
