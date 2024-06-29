@@ -39,8 +39,8 @@ class FishingHook extends Projectile{
 	protected $gravity = 0.1;
 	protected $drag = 0.05;
 
-	public $waitChance = 0;
-	public $waitTimer = 0;
+	public $waitChance = 120;
+	public $waitTimer = 240;
 	public $attractTimer = 0;
 	public $attracted = false;
 	public $coughtTimer = 0;
