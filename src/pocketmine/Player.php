@@ -286,6 +286,29 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	/** @var int */
 	protected $lastEnderPearlUse = 0;
 
+
+	/**
+	 * Checks a supplied username and checks it is valid.
+	 * @param string $name
+	 *
+	 * @return bool
+	 */
+	public static function isValidUserName(string $name) : bool{
+		$lname = strtolower($name);
+		$len = strlen($name);
+		return $lname !== "rcon" and $lname !== "console" and $len >= 1 and $len <= 16 and preg_match("/[^A-Za-z0-9_]/", $name) === 0;
+	}
+
+	/**
+	 * Checks the length of a supplied skin bitmap and returns whether the length is valid.
+	 * @param string $skin
+	 *
+	 * @return bool
+	 */
+	public static function isValidSkin(string $skin) : bool{
+		return strlen($skin) === 64 * 64 * 4 or strlen($skin) === 64 * 32 * 4;
+	}
+
 	public function linkHookToPlayer(FishingHook $entity){
 		if($entity->isAlive()){
 			$this->setFishingHook($entity);
@@ -2170,16 +2193,14 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 					break;
 				}
 
-				if(!$valid or $this->iusername === "rcon" or $this->iusername === "console"){
+				if(!Player::isValidUserName($packet->username)){
 					$this->close("", "disconnectionScreen.invalidName");
-
-					break;
+					return true;
 				}
 
-				if((strlen($packet->skin) != 64 * 64 * 4) and (strlen($packet->skin) != 64 * 32 * 4)){
+				if(!Player::isValidSkin($packet->skin)){
 					$this->close("", "disconnectionScreen.invalidSkin");
-
-					break;
+					return true;
 				}
 
 				$this->setSkin($packet->skin, $packet->skinId);
