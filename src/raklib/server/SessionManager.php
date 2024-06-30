@@ -190,7 +190,7 @@ class SessionManager{
 
 		$this->ipSec = [];
 
-		if(($this->ticks % ((int) self::RAKLIB_TPS / 3)) === 0){
+		if(($this->ticks % (self::RAKLIB_TPS / 4)) === 0){
 			if($this->sendBytes > 0 or $this->receiveBytes > 0){
 				$diff = max(0.005, $time - $this->lastMeasure);
 				$this->streamOption("bandwidth", serialize([
