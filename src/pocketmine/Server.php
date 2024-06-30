@@ -702,6 +702,14 @@ class Server{
 	}
 
 	/**
+	 * Genisys API
+	 * @return ResourcePackManager
+	 */
+	public function getResourcePackManager() : ResourcePackManager{
+		return $this->resourceManager;
+	}
+
+	/**
 	 * @return ServerScheduler
 	 */
 	public function getScheduler(){
