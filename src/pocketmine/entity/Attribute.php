@@ -171,6 +171,10 @@ class Attribute{
 		return $this->currentValue;
 	}
 
+	public function resetToDefault(){
+		$this->setValue($this->getDefaultValue());
+	}
+
 	public function setValue($value, bool $fit = true, bool $shouldSend = false){
 		if($value > $this->getMaxValue() or $value < $this->getMinValue()){
 			if(!$fit){
