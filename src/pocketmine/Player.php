@@ -3741,6 +3741,14 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	}
 
 	/**
+	 * Returns whether entities can climb up this block.
+	 * @return bool
+	 */
+	public function canClimb() : bool{
+		return false;
+	}
+
+	/**
 	 * Gets the username
 	 *
 	 * @return string
