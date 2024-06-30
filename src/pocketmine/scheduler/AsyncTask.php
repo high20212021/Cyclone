@@ -166,6 +166,51 @@ abstract class AsyncTask extends \Threaded implements \Collectable{
 
 	}
 
+	/**
+	 * Call this method from {@link AsyncTask#onCompletion} to fetch the data stored in the constructor, if any, and
+	 * clears it from the storage.
+	 *
+	 * Do not call this method from {@link AsyncTask#onProgressUpdate}, because this method deletes the data and cannot
+	 * be used in the next {@link AsyncTask#onProgressUpdate} call or from {@link AsyncTask#onCompletion}. Use
+	 * {@link AsyncTask#peekLocal} instead.
+	 *
+	 * @param Server $server default null
+	 *
+	 * @return mixed
+	 *
+	 * @throws \RuntimeException if no data were stored by this AsyncTask instance.
+	 */
+	protected function fetchLocal(Server $server = null){
+		if($server === null){
+			$server = Server::getInstance();
+			assert($server !== null, "Call this method only from the main thread!");
+		}
+
+		return $server->getScheduler()->fetchLocalComplex($this);
+	}
+
+	/**
+	 * Call this method from {@link AsyncTask#onProgressUpdate} to fetch the data stored in the constructor.
+	 *
+	 * Use {@link AsyncTask#peekLocal} instead from {@link AsyncTask#onCompletion}, because this method does not delete
+	 * the data, and not clearing the data will result in a warning for memory leak after {@link AsyncTask#onCompletion}
+	 * finished executing.
+	 *
+	 * @param Server|null $server default null
+	 *
+	 * @return mixed
+	 *
+	 * @throws \RuntimeException if no data were stored by this AsyncTask instance
+	 */
+	protected function peekLocal(Server $server = null){
+		if($server === null){
+			$server = Server::getInstance();
+			assert($server !== null, "Call this method only from the main thread!");
+		}
+
+		return $server->getScheduler()->peekLocalComplex($this);
+	}
+
 	public function cleanObject(){
 		foreach($this as $p => $v){
 			if(!($v instanceof \Threaded) and !in_array($p, ["isFinished", "isGarbage", "cancelRun"])){

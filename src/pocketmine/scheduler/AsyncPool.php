@@ -149,6 +149,7 @@ class AsyncPool{
 
 				if(!$task->hasCancelledRun()){
 					$task->onCompletion($this->server);
+					$this->server->getScheduler()->removeLocalComplex($task);
 				}
 
 				$this->removeTask($task);
