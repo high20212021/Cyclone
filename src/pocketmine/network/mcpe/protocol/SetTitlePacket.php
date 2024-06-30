@@ -36,22 +36,22 @@ class SetTitlePacket extends DataPacket{
 
 	const NETWORK_ID = Info::SET_TITLE_PACKET;
 
-	const TYPE_CLEAR_TITLE = 0;
-	const TYPE_RESET_TITLE = 1;
-	const TYPE_SET_TITLE = 2;
-	const TYPE_SET_SUBTITLE = 3;
-	const TYPE_SET_ACTIONBAR_MESSAGE = 4;
-	const TYPE_SET_ANIMATION_TIMES = 5;
+	const TYPE_CLEAR = 0, TYPE_CLEAR_TITLE = 0;
+	const TYPE_RESET = 1, TYPE_RESET_TITLE = 1;
+	const TYPE_TITLE = 2, TYPE_SET_TITLE = 2;
+	const TYPE_SUB_TITLE = 3 ,TYPE_SET_SUBTITLE = 3;
+	const TYPE_ACTION_BAR = 4, TYPE_SET_ACTIONBAR_MESSAGE = 4;
+	const TYPE_TIMES = 5, TYPE_SET_ANIMATION_TIMES = 5;
 
 	public $type;
-	public $title;
+	public $text;
 	public $fadeInDuration;
 	public $duration;
 	public $fadeOutDuration;
 
 	public function decode(){
 		$this->type = $this->getVarInt();
-		$this->title = $this->getString();
+		$this->text = $this->getString();
 		$this->fadeInDuration = $this->getVarInt();
 		$this->duration = $this->getVarInt();
 		$this->fadeOutDuration = $this->getVarInt();
@@ -60,7 +60,7 @@ class SetTitlePacket extends DataPacket{
 	public function encode(){
 		$this->reset();
 		$this->putVarInt($this->type);
-		$this->putString($this->title);
+		$this->putString($this->text);
 		$this->putVarInt($this->fadeInDuration);
 		$this->putVarInt($this->duration);
 		$this->putVarInt($this->fadeOutDuration);
@@ -68,7 +68,7 @@ class SetTitlePacket extends DataPacket{
 
 	/**
 	 * @return PacketName|string
-     */
+	 */
 	public function getName(){
 		return "SetTitlePacket";
 	}
