@@ -273,10 +273,10 @@ class PluginManager{
 								break;
 							}
 
-							if($compatible === false){
+							/*if($compatible === false){
 								$this->server->getLogger()->error($this->server->getLanguage()->translateString("pocketmine.plugin.loadError", [$name, "%pocketmine.plugin.incompatibleAPI"]));
 								continue;
-							}
+							}*/
 
 							if($compatiblegeniapi === false){
 								$this->server->getLogger()->error("Could not load plugin '{$description->getName()}': Incompatible GeniAPI version");
