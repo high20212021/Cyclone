@@ -55,6 +55,7 @@ class RedstoneSource extends Flowable{
 		if($this->isActivated()){
 			$this->activate();
 		}
+		return true;
 	}
 
 	public function onBreak(Item $item){

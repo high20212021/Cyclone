@@ -88,6 +88,7 @@ class Anvil extends Fallable{
 		$direction = ($player !== null? $player->getDirection(): 0) & 0x03;
 		$this->meta = ($this->meta & 0x0c) | $direction;
 		$this->getLevel()->setBlock($block, $this, true, true);
+		return true;
 	}
 
 	public function getDrops(Item $item) : array {

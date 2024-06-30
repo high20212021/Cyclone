@@ -193,6 +193,7 @@ abstract class Liquid extends Transparent{
 		if($type === Level::BLOCK_UPDATE_NORMAL){
 			$this->checkForHarden();
 			$this->getLevel()->scheduleUpdate($this, $this->tickRate());
+			return Level::BLOCK_UPDATE_RANDOM;
 		}elseif($type === Level::BLOCK_UPDATE_SCHEDULED){
 			if($this->temporalVector === null){
 				$this->temporalVector = new Vector3(0, 0, 0);
@@ -261,7 +262,7 @@ abstract class Liquid extends Transparent{
 				if($this instanceof Lava and $bottomBlock instanceof Water){
 					$this->getLevel()->setBlock($bottomBlock, Block::get(Item::STONE), true);
 					$this->triggerLavaMixEffects($bottomBlock);
-					return;
+					return false;
 				}
 
 				if($decay >= 8){
@@ -284,7 +285,7 @@ abstract class Liquid extends Transparent{
 
 				if($l >= 8){
 					$this->checkForHarden();
-					return;
+					return false;
 				}
 
 				if($flags[0]){
@@ -305,8 +306,9 @@ abstract class Liquid extends Transparent{
 			}
 
 			$this->checkForHarden();
-
+			return Level::BLOCK_UPDATE_SCHEDULED;
 		}
+		return false;
 	}
 
 	private function flowIntoBlock(Block $block, $newFlowDecay){

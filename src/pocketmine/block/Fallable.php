@@ -66,6 +66,8 @@ abstract class Fallable extends Solid{
 
 				$fall->spawnToAll();
 			}
+			return Level::BLOCK_UPDATE_NORMAL;
 		}
+		return false;
 	}
 }

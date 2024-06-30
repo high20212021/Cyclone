@@ -145,6 +145,7 @@ class PoweredRepeater extends RedstoneSource{
 		if($this->checkPower($this)){
 			$this->activate();
 		}
+		return true;
 	}
 
 	public function onBreak(Item $item){

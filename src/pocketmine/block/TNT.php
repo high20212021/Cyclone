@@ -111,6 +111,7 @@ class TNT extends Solid implements ElectricalAppliance{
 		$this->getLevel()->setBlock($this, $this, true, false);
 
 		$this->getLevel()->scheduleUpdate($this, 40);
+		return;
 	}
 
 	public function onActivate(Item $item, Player $player = null){

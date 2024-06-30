@@ -87,7 +87,9 @@ class Grass extends Solid{
 					}
 				}
 			}
+			return Level::BLOCK_UPDATE_RANDOM;
 		}
+		return false;
 	}
 
 	public function onActivate(Item $item, Player $player = null){

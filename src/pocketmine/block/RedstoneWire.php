@@ -93,9 +93,6 @@ class RedstoneWire extends RedstoneSource{
 			}
 		}
 
-		unset($block);
-		unset($hasChecked);
-
 		return $strength;
 	}
 
@@ -140,8 +137,6 @@ class RedstoneWire extends RedstoneSource{
 				}
 			}
 		}
-
-		unset($block);
 
 		return $hasChecked;
 	}
@@ -193,8 +188,6 @@ class RedstoneWire extends RedstoneSource{
 			}
 
 			$this->checkTorchOn($block, [$this->getOppositeSide($side)]);
-
-			unset($connected, $notConnected);
 		}
 	}
 
@@ -229,8 +222,6 @@ class RedstoneWire extends RedstoneSource{
 			}
 
 			$this->checkTorchOff($block, [$this->getOppositeSide($side)]);
-
-			unset($connected, $notConnected);
 		}
 	}
 

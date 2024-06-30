@@ -98,8 +98,9 @@ class PressurePlate extends RedstoneSource{
 
 	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
 		$below = $this->getSide(Vector3::SIDE_DOWN);
-		if($below instanceof Transparent) return;
+		if($below instanceof Transparent) return false;
 		else $this->getLevel()->setBlock($block, $this, true, false);
+		return true;
 	}
 
 	public function onBreak(Item $item){

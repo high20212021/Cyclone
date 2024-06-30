@@ -24,6 +24,7 @@ namespace pocketmine\command\defaults;
 use pocketmine\command\CommandSender;
 use pocketmine\event\TimingsHandler;
 use pocketmine\event\TranslationContainer;
+use pocketmine\Player;
 use pocketmine\scheduler\BulkCurlTask;
 use pocketmine\Server;
 
