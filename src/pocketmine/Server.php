@@ -2149,8 +2149,6 @@ class Server{
 		$this->reloadWhitelist();
 		$this->operators->reload();
 
-		$this->memoryManager->doObjectCleanup();
-
 		foreach($this->getIPBans()->getEntries() as $entry){
 			$this->getNetwork()->blockAddress($entry->getName(), -1);
 		}

@@ -3711,7 +3711,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	 *
 	 * @param $title
 	 * @param string $subtitle
-	 * @return bool
 	 */
 	public function sendTitle($title, $subtitle = "", $fadein = 20, $fadeout = 20, $duration = 5){
 		$this->addTitle($title, $subtitle, $fadein, $duration, $fadeout);

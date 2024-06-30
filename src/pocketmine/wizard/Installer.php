@@ -48,6 +48,8 @@ class Installer{
 
 	private $defaultLang;
 
+	private $lang;
+
 	public function __construct(){
 
 	}
