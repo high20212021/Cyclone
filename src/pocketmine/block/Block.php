@@ -885,4 +885,8 @@ class Block extends Position implements BlockIds, Metadatable{
 			$this->getLevel()->getBlockMetadata()->removeMetadata($this, $metadataKey, $plugin);
 		}
 	}
+
+	public function canClimb() : bool{
+		return false;
+	}
 }
