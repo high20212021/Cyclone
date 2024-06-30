@@ -172,7 +172,7 @@ class SimpleCommandMap implements CommandMap{
 		if($label === null){
 			$label = $command->getName();
 		}
-		$label = strtolower(trim($label));
+		$label = trim($label);
 		
 		//Check if command was disabled in config and for override
 		if(!(($this->commandConfig[$label] ?? $this->commandConfig["default"] ?? true) or $overrideConfig)){
@@ -254,15 +254,35 @@ class SimpleCommandMap implements CommandMap{
 		}else $command->execute($sender, $label, $args);
 	}
 
-	public function dispatch(CommandSender $sender, $commandLine){
-		$args = explode(" ", $commandLine);
+	/**
+	 * Returns a command to match the specified command line, or null if no matching command was found.
+	 * This method is intended to provide capability for handling commands with spaces in their name.
+	 * The referenced parameters will be modified accordingly depending on the resulting matched command.
+	 *
+	 * @param string   &$commandName
+	 * @param string[] &$args
+	 *
+	 * @return Command|null
+	 */
+	public function matchCommand(string &$commandName, array &$args){
+		$count = min(count($args), 255);
 
-		if(count($args) === 0){
-			return false;
+		for($i = 0; $i < $count; ++$i){
+			$commandName .= array_shift($args);
+			if(($command = $this->getCommand($commandName)) instanceof Command){
+				return $command;
+			}
+
+			$commandName .= " ";
 		}
 
-		$sentCommandLabel = strtolower(array_shift($args));
-		$target = $this->getCommand($sentCommandLabel);
+		return null;
+	}
+
+	public function dispatch(CommandSender $sender, $commandLine){
+		$args = explode(" ", $commandLine);
+		$sentCommandLabel = "";
+		$target = $this->matchCommand($sentCommandLabel, $args);
 
 		if($target === null){
 			return false;
@@ -270,18 +290,11 @@ class SimpleCommandMap implements CommandMap{
 
 		$target->timings->startTiming();
 		try{
-			if($this->server->advancedCommandSelector){
-				$this->dispatchAdvanced($sender, $target, $sentCommandLabel, $args);
-			}else{
-				$target->execute($sender, $sentCommandLabel, $args);
-			}
+			$target->execute($sender, $sentCommandLabel, $args);
 		}catch(\Throwable $e){
 			$sender->sendMessage(new TranslationContainer(TextFormat::RED . "%commands.generic.exception"));
 			$this->server->getLogger()->critical($this->server->getLanguage()->translateString("pocketmine.command.exception", [$commandLine, (string) $target, $e->getMessage()]));
-			$logger = $sender->getServer()->getLogger();
-			if($logger instanceof MainLogger){
-				$logger->logException($e);
-			}
+			$sender->getServer()->getLogger()->logException($e);
 		}
 		$target->timings->stopTiming();
 
@@ -297,11 +310,7 @@ class SimpleCommandMap implements CommandMap{
 	}
 
 	public function getCommand($name){
-		if(isset($this->knownCommands[$name])){
-			return $this->knownCommands[$name];
-		}
-
-		return null;
+		return $this->knownCommands[$name] ?? null;
 	}
 
 	/**
@@ -315,11 +324,11 @@ class SimpleCommandMap implements CommandMap{
 	/**
 	 * @return void
 	 */
-	public function registerServerAliases(){
+	public function registerServerAliases() : void{
 		$values = $this->server->getCommandAliases();
 
 		foreach($values as $alias => $commandStrings){
-			if(strpos($alias, ":") !== false or strpos($alias, " ") !== false){
+			if(strpos($alias, ":") !== false){
 				$this->server->getLogger()->warning($this->server->getLanguage()->translateString("pocketmine.command.alias.illegal", [$alias]));
 				continue;
 			}
@@ -327,18 +336,31 @@ class SimpleCommandMap implements CommandMap{
 			$targets = [];
 
 			$bad = "";
+			$recursive = "";
 			foreach($commandStrings as $commandString){
 				$args = explode(" ", $commandString);
-				$command = $this->getCommand($args[0]);
+				$commandName = "";
+				$command = $this->matchCommand($commandName, $args);
+
 
 				if($command === null){
 					if(strlen($bad) > 0){
 						$bad .= ", ";
 					}
 					$bad .= $commandString;
+				}elseif($commandName === $alias){
+					if($recursive !== ""){
+						$recursive .= ", ";
+					}
+					$recursive .= $commandString;
 				}else{
 					$targets[] = $commandString;
 				}
+			}
+
+			if($recursive !== ""){
+				$this->server->getLogger()->warning($this->server->getLanguage()->translateString("pocketmine.command.alias.recursive", [$alias, $recursive]));
+				continue;
 			}
 
 			if(strlen($bad) > 0){

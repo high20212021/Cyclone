@@ -10,6 +10,7 @@ server.properties
 *.txt
 genisys.yml
 crashdumps/*
+resource_packs/*
 memory_dumps/*
 server.lock
 /phpstan.neon

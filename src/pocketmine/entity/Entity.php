@@ -487,7 +487,24 @@ abstract class Entity extends Location implements Metadatable{
 	 * @param float $value
 	 */
 	public function setScale(float $value){
+		$multiplier = $value / $this->getScale();
+
+		$this->width *= $multiplier;
+		$this->height *= $multiplier;
+		$halfWidth = $this->width / 2;
+
+		$this->boundingBox->setBounds(
+			$this->x - $halfWidth,
+			$this->y,
+			$this->z - $halfWidth,
+			$this->x + $halfWidth,
+			$this->y + $this->height,
+			$this->z + $halfWidth
+		);
+
 		$this->setDataProperty(self::DATA_SCALE, self::DATA_TYPE_FLOAT, $value);
+		$this->setDataProperty(self::DATA_BOUNDING_BOX_WIDTH, self::DATA_TYPE_FLOAT, $this->width);
+		$this->setDataProperty(self::DATA_BOUNDING_BOX_HEIGHT, self::DATA_TYPE_FLOAT, $this->height);
 	}
 
 	public function isSneaking(){
@@ -506,7 +523,7 @@ abstract class Entity extends Location implements Metadatable{
 		if($value !== $this->isSprinting()){
 			$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_SPRINTING, (bool) $value);
 			$attr = $this->attributeMap->getAttribute(Attribute::MOVEMENT_SPEED);
-			$attr->setValue($value ? ($attr->getValue() * 1.3) : ($attr->getValue() / 1.3));
+			$attr->setValue($value ? ($attr->getValue() * 1.3) : ($attr->getValue() / 1.3), false, true);
 		}
 	}
 
@@ -807,12 +824,15 @@ abstract class Entity extends Location implements Metadatable{
 
 	/**
 	 * @param Player $player
+	 * @param bool   $send
 	 */
-	public function despawnFrom(Player $player){
+	public function despawnFrom(Player $player, bool $send = true){
 		if(isset($this->hasSpawned[$player->getLoaderId()])){
-			$pk = new RemoveEntityPacket();
-			$pk->eid = $this->id;
-			$player->dataPacket($pk);
+			if($send){
+				$pk = new RemoveEntityPacket();
+				$pk->eid = $this->id;
+				$player->dataPacket($pk);
+			}
 			unset($this->hasSpawned[$player->getLoaderId()]);
 		}
 	}
@@ -1818,6 +1838,7 @@ abstract class Entity extends Location implements Metadatable{
 			$this->closed = true;
 			$this->removeEffect(Effect::HEALTH_BOOST);
 			$this->despawnFromAll();
+			$this->hasSpawned = [];
 			if($this->linkedType != 0){
 				$this->linkedEntity->setLinked(0, $this);
 			}
@@ -1833,6 +1854,7 @@ abstract class Entity extends Location implements Metadatable{
 			}
 
 			$this->namedtag = null;
+			$this->lastDamageCause = null;
 		}
 
 		$this->activatedPressurePlates = [];

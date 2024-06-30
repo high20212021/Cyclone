@@ -133,7 +133,11 @@ use pocketmine\network\protocol\InteractPacket;
 use pocketmine\network\protocol\MovePlayerPacket;
 use pocketmine\network\protocol\PlayerActionPacket;
 use pocketmine\network\protocol\PlayStatusPacket;
+use pocketmine\network\protocol\ResourcePackChunkDataPacket;
+use pocketmine\network\protocol\ResourcePackClientResponsePacket;
+use pocketmine\network\protocol\ResourcePackDataInfoPacket;
 use pocketmine\network\protocol\ResourcePacksInfoPacket;
+use pocketmine\network\protocol\ResourcePackStackPacket;
 use pocketmine\network\protocol\RespawnPacket;
 use pocketmine\network\protocol\SetEntityMotionPacket;
 use pocketmine\network\protocol\SetPlayerGameTypePacket;
@@ -149,6 +153,7 @@ use pocketmine\network\SourceInterface;
 use pocketmine\permission\PermissibleBase;
 use pocketmine\permission\PermissionAttachment;
 use pocketmine\plugin\Plugin;
+use pocketmine\resourcepacks\ResourcePack;
 use pocketmine\tile\ItemFrame;
 use pocketmine\tile\Spawnable;
 use pocketmine\utils\TextFormat;
@@ -280,6 +285,29 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
 	/** @var int */
 	protected $lastEnderPearlUse = 0;
+
+
+	/**
+	 * Checks a supplied username and checks it is valid.
+	 * @param string $name
+	 *
+	 * @return bool
+	 */
+	public static function isValidUserName(string $name) : bool{
+		$lname = strtolower($name);
+		$len = strlen($name);
+		return $lname !== "rcon" and $lname !== "console" and $len >= 1 and $len <= 16 and preg_match("/[^A-Za-z0-9_]/", $name) === 0;
+	}
+
+	/**
+	 * Checks the length of a supplied skin bitmap and returns whether the length is valid.
+	 * @param string $skin
+	 *
+	 * @return bool
+	 */
+	public static function isValidSkin(string $skin) : bool{
+		return strlen($skin) === 64 * 64 * 4 or strlen($skin) === 64 * 32 * 4;
+	}
 
 	public function linkHookToPlayer(FishingHook $entity){
 		if($entity->isAlive()){
@@ -962,10 +990,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 		if($this->server->dserverConfig["enable"] and $this->server->dserverConfig["queryAutoUpdate"]){
 			$this->server->updateQuery();
 		}
-
-		/*if($this->server->getUpdater()->hasUpdate() and $this->hasPermission(Server::BROADCAST_CHANNEL_ADMINISTRATIVE)){
-			$this->server->getUpdater()->showPlayerUpdate($this);
-		}*/
 
 		if($this->getHealth() <= 0){
 			$pk = new RespawnPacket();
@@ -1878,14 +1902,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 		return ($dot1 - $dot) >= -$maxDiff;
 	}
 
-	public function onPlayerPreLogin(){
-		$pk = new PlayStatusPacket();
-		$pk->status = PlayStatusPacket::LOGIN_SUCCESS;
-		$this->dataPacket($pk);
-
-		$this->processLogin();
-	}
-
 	public function clearCreativeItems(){
 		$this->personalCreativeItems = [];
 	}
@@ -2007,7 +2023,11 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 			return;
 		}
 
-		$this->dataPacket(new ResourcePacksInfoPacket());
+		$pk = new ResourcePacksInfoPacket();
+		$manager = $this->server->getResourceManager();
+		$pk->resourcePackEntries = $manager->getResourceStack();
+		$pk->mustAccept = $manager->resourcePacksRequired();
+		$this->dataPacket($pk);
 
 		if(!$this->hasValidSpawnPosition() and isset($this->namedtag->SpawnLevel) and ($level = $this->server->getLevelByName($this->namedtag["SpawnLevel"])) instanceof Level){
 			$this->spawnPosition = new WeakPosition($this->namedtag["SpawnX"], $this->namedtag["SpawnY"], $this->namedtag["SpawnZ"], $level);
@@ -2173,16 +2193,14 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 					break;
 				}
 
-				if(!$valid or $this->iusername === "rcon" or $this->iusername === "console"){
+				if(!Player::isValidUserName($packet->username)){
 					$this->close("", "disconnectionScreen.invalidName");
-
-					break;
+					return true;
 				}
 
-				if((strlen($packet->skin) != 64 * 64 * 4) and (strlen($packet->skin) != 64 * 32 * 4)){
+				if(!Player::isValidSkin($packet->skin)){
 					$this->close("", "disconnectionScreen.invalidSkin");
-
-					break;
+					return true;
 				}
 
 				$this->setSkin($packet->skin, $packet->skinId);
@@ -2194,10 +2212,67 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 					break;
 				}
 
+				$pk = new PlayStatusPacket();
+				$pk->status = PlayStatusPacket::LOGIN_SUCCESS;
+				$this->dataPacket($pk);
+
 				if($this->isConnected()){
-					$this->onPlayerPreLogin();
+					$this->processLogin();
 				}
 
+				break;
+
+			case ProtocolInfo::RESOURCE_PACK_CLIENT_RESPONSE_PACKET:
+				switch($packet->status){
+					case ResourcePackClientResponsePacket::STATUS_REFUSED:
+						$this->close("", "must accept resource packs to join", true);
+						break;
+					case ResourcePackClientResponsePacket::STATUS_SEND_PACKS:
+						$manager = $this->server->getResourceManager();
+						foreach($packet->packIds as $uuid){
+							$pack = $manager->getPackById($uuid);
+							if(!($pack instanceof ResourcePack)){
+								//Client requested a resource pack but we don't have it available on the server
+								$this->close("", "disconnectionScreen.resourcePack", true); //TODO: add strings to lang files
+								break;
+							}
+
+							$pk = new ResourcePackDataInfoPacket();
+							$pk->packId = $pack->getPackId();
+							$pk->maxChunkSize = 1048576; //1MB
+							$pk->chunkCount = $pack->getPackSize() / $pk->maxChunkSize;
+							$pk->compressedPackSize = $pack->getPackSize();
+							$pk->sha256 = $pack->getSha256();
+							$this->dataPacket($pk);
+						}
+						break;
+					case ResourcePackClientResponsePacket::STATUS_HAVE_ALL_PACKS:
+						$pk = new ResourcePackStackPacket();
+						$manager = $this->server->getResourceManager();
+						$pk->resourcePackStack = $manager->getResourceStack();
+						$pk->mustAccept = $manager->resourcePacksRequired();
+						$this->dataPacket($pk);
+						break;
+					case ResourcePackClientResponsePacket::STATUS_COMPLETED:
+						//$this->processLogin();
+						break;
+				}
+				break;
+
+			case ProtocolInfo::RESOURCE_PACK_CHUNK_REQUEST_PACKET:
+				$manager = $this->server->getResourceManager();
+				$pack = $manager->getPackById($packet->packId);
+				if(!($pack instanceof ResourcePack)){
+					$this->close("", "disconnectionScreen.resourcePack", true);
+					return true;
+				}
+
+				$pk = new ResourcePackChunkDataPacket();
+				$pk->packId = $pack->getPackId();
+				$pk->chunkIndex = $packet->chunkIndex;
+				$pk->data = $pack->getPackChunk(1048576 * $packet->chunkIndex, 1048576);
+				$pk->progress = (1048576 * $packet->chunkIndex);
+				$this->dataPacket($pk);
 				break;
 			case ProtocolInfo::MOVE_PLAYER_PACKET:
 				if($this->linkedEntity instanceof Entity){
