@@ -98,6 +98,11 @@ namespace pocketmine {
 		exit(1);
 	}
 
+	if(PHP_INT_SIZE < 8){
+		echo "[CRITICAL] Running PocketMine-MP with 32-bit systems/PHP is no longer supported. Please upgrade to a 64-bit system or use a 64-bit PHP binary.";
+		exit(1);
+	}
+
 	if(!extension_loaded("pthreads")){
 		echo "[CRITICAL] Unable to find the pthreads extension." . PHP_EOL;
 		echo "[CRITICAL] Please use the installer provided on the homepage." . PHP_EOL;
@@ -395,28 +400,13 @@ namespace pocketmine {
 	if(substr_count($pthreads_version, ".") < 2){
 		$pthreads_version = "0.$pthreads_version";
 	}
-	if(version_compare($pthreads_version, "3.1.5") < 0){
-		$logger->critical("pthreads >= 3.1.5 is required, while you have $pthreads_version.");
+	if(version_compare($pthreads_version, "4.0.0") < 0){
+		$logger->critical("pthreads >= 4.0.0 is required, while you have $pthreads_version.");
 		++$errors;
-	}
-
-	if(!extension_loaded("uopz")){
-		//$logger->notice("Couldn't find the uopz extension. Some functions may be limited");
-	}
-
-	if(extension_loaded("pocketmine")){
-		if(version_compare(phpversion("pocketmine"), "0.0.1") < 0){
-			$logger->critical("You have the native PocketMine extension, but your version is lower than 0.0.1.");
-			++$errors;
-		}elseif(version_compare(phpversion("pocketmine"), "0.0.4") > 0){
-			$logger->critical("You have the native PocketMine extension, but your version is higher than 0.0.4.");
-			++$errors;
-		}
 	}
 	
 	if(extension_loaded("xdebug")){
 		$logger->warning("
-
 
 	You are running PocketMine with xdebug enabled. This has a major impact on performance.
 
