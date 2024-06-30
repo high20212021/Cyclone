@@ -35,6 +35,10 @@ class Vector2{
 	/** @var float */
 	public $y;
 
+	public static function createRandomDirection(Random $random){
+		return VectorMath::getDirection2D($random->nextFloat() * 2 * pi());
+	}
+
 	public function __construct(float $x = 0, float $y = 0){
 		$this->x = $x;
 		$this->y = $y;
