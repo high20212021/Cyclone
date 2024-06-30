@@ -13,9 +13,32 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace raklib\protocol;
 
+use raklib\RakLib;
 
-class DATA_PACKET_A extends DataPacket{
-	public static $ID = 0x8A;
+abstract class OfflineMessage extends Packet{
+	/** @var string */
+	protected $magic;
+
+	/**
+	 * @return void
+	 */
+	protected function readMagic(){
+		$this->magic = $this->get(16);
+	}
+
+	/**
+	 * @return void
+	 */
+	protected function writeMagic(){
+		$this->put(RakLib::MAGIC);
+	}
+
+	public function isValid() : bool{
+		return $this->magic === RakLib::MAGIC;
+	}
+
 }
