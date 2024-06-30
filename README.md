@@ -15,7 +15,7 @@ Cyclone is a fork of **[iTXTech/Genisys](https://github.com/iTXTech/Genisys)** .
  - [x] better fishing
  - [x] beacon
  - [x] more blocks/items
- - [ ] fully API3.0.0(alpha5 now)
+ - [ ] fully API3.0.0(alpha6 now)
  - [x] anvil enchanted
 
 ## Discussion
