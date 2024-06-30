@@ -3404,9 +3404,15 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
 				$tile = $this->level->getTile($this->temporalVector->setComponents($packet->x, $packet->y, $packet->z));
 				if($tile instanceof ItemFrame){
+					$ev = new PlayerInteractEvent($this, $this->inventory->getItemInHand(), $tile->getBlock(), 5 - $tile->getBlock()->getDamage(), PlayerInteractEvent::LEFT_CLICK_BLOCK);
+					$this->server->getPluginManager()->callEvent($ev);
 					if($this->isSpectator()){
+						$ev->setCancelled();
+					}
+
+					if($ev->isCancelled()){
 						$tile->spawnTo($this);
-						break;
+						return true;
 					}
 
 					if(lcg_value() <= $tile->getItemDropChance()){
