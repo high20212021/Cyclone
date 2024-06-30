@@ -24,7 +24,7 @@
  */
 namespace pocketmine\network;
 
-use pocketmine\network\protocol\DataPacket;
+use pocketmine\network\mcpe\protocol\DataPacket;
 use pocketmine\Player;
 
 /**
@@ -36,7 +36,7 @@ interface SourceInterface{
 	 * Sends a DataPacket to the interface, returns an unique identifier for the packet if $needACK is true
 	 *
 	 * @param Player     $player
-	 * @param DataPacket $packet
+	 * @param \pocketmine\network\mcpe\protocol\DataPacket $packet
 	 * @param bool       $needACK
 	 * @param bool       $immediate
 	 *

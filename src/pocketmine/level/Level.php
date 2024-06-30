@@ -90,20 +90,19 @@ use pocketmine\metadata\MetadataValue;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\FloatTag;
-use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\LongTag;
 use pocketmine\nbt\tag\ShortTag;
 use pocketmine\nbt\tag\StringTag;
-use pocketmine\network\protocol\AddEntityPacket;
-use pocketmine\network\protocol\BatchPacket;
-use pocketmine\network\protocol\DataPacket;
-use pocketmine\network\protocol\FullChunkDataPacket;
-use pocketmine\network\protocol\LevelEventPacket;
-use pocketmine\network\protocol\MoveEntityPacket;
-use pocketmine\network\protocol\SetEntityMotionPacket;
-use pocketmine\network\protocol\SetTimePacket;
-use pocketmine\network\protocol\UpdateBlockPacket;
+use pocketmine\network\mcpe\protocol\AddEntityPacket;
+use pocketmine\network\mcpe\protocol\BatchPacket;
+use pocketmine\network\mcpe\protocol\DataPacket;
+use pocketmine\network\mcpe\protocol\FullChunkDataPacket;
+use pocketmine\network\mcpe\protocol\LevelEventPacket;
+use pocketmine\network\mcpe\protocol\MoveEntityPacket;
+use pocketmine\network\mcpe\protocol\SetEntityMotionPacket;
+use pocketmine\network\mcpe\protocol\SetTimePacket;
+use pocketmine\network\mcpe\protocol\UpdateBlockPacket;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\Server;
@@ -159,7 +158,7 @@ class Level implements ChunkManager, Metadatable{
 
 	private $blockCache = [];
 
-	/** @var DataPacket[] */
+	/** @var \pocketmine\network\mcpe\protocol\DataPacket[] */
 	private $chunkCache = [];
 
 	private $cacheChunks = false;
@@ -184,7 +183,7 @@ class Level implements ChunkManager, Metadatable{
 	/** @var Player[][] */
 	private $playerLoaders = [];
 
-	/** @var DataPacket[] */
+	/** @var \pocketmine\network\mcpe\protocol\DataPacket[] */
 	private $chunkPackets = [];
 
 	/** @var float[] */
@@ -3053,7 +3052,7 @@ class Level implements ChunkManager, Metadatable{
 	 * @param int    $chunkZ
 	 * @param string $payload
 	 *
-	 * @return DataPacket
+	 * @return \pocketmine\network\mcpe\protocol\DataPacket
 	 */
 	public static function getChunkCacheFromData($chunkX, $chunkZ, $payload){
 		$pk = new FullChunkDataPacket();

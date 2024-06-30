@@ -23,7 +23,7 @@ namespace pocketmine\entity;
 use pocketmine\item\Potion;
 use pocketmine\level\particle\Particle;
 use pocketmine\math\AxisAlignedBB;
-use pocketmine\network\protocol\AddEntityPacket;
+use pocketmine\network\mcpe\protocol\AddEntityPacket;
 use pocketmine\Player;
 
 class AreaEffectCloud extends Entity{

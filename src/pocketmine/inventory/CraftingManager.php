@@ -22,7 +22,7 @@ namespace pocketmine\inventory;
 use pocketmine\event\Timings;
 use pocketmine\item\Item;
 use pocketmine\item\Potion;
-use pocketmine\network\protocol\CraftingDataPacket;
+use pocketmine\network\mcpe\protocol\CraftingDataPacket;
 use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\utils\MainLogger;
@@ -43,7 +43,7 @@ class CraftingManager{
 
 	private static $RECIPE_COUNT = 0;
 
-	/** @var CraftingDataPacket */
+	/** @var \pocketmine\network\mcpe\protocol\CraftingDataPacket */
 	private $craftingDataCache;
 
 	public function __construct(){
@@ -122,7 +122,7 @@ class CraftingManager{
 	/**
 	 * Returns a CraftingDataPacket for sending to players. Rebuilds the cache if it is outdated.
 	 *
-	 * @return CraftingDataPacket
+	 * @return \pocketmine\network\mcpe\protocol\CraftingDataPacket
 	 */
 	public function getCraftingDataPacket() : CraftingDataPacket{
 		if($this->craftingDataCache === null){

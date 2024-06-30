@@ -20,20 +20,18 @@
 
 namespace pocketmine\entity;
 
-use pocketmine\entity\Projectile;
 use pocketmine\item\Item;
 use pocketmine\item\Potion;
 use pocketmine\level\Level;
-use pocketmine\level\particle\SpellParticle;
+use pocketmine\level\particle\ItemBreakParticle;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\ShortTag;
-use pocketmine\network\protocol\AddEntityPacket;
+use pocketmine\network\mcpe\protocol\AddEntityPacket;
 use pocketmine\Player;
-use pocketmine\level\particle\ItemBreakParticle;
 
 class LingeringPotion extends Projectile{
 	const NETWORK_ID = 101;
