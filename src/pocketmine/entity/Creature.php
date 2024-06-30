@@ -75,10 +75,11 @@ abstract class Creature extends Living{
 	}
 
 	public function attack($damage, EntityDamageEvent $source){
-		parent::attack($damage, $source);
+		$attack = parent::attack($damage, $source);
 		if(!$source->isCancelled() and $source->getCause() == EntityDamageEvent::CAUSE_ENTITY_ATTACK){
 			$this->attackingTick = 20;
 		}
+		return $attack;
 	}
 
 	/**

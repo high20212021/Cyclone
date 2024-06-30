@@ -71,7 +71,7 @@ class Boat extends Vehicle{
 	}
 
 	public function attack($damage, EntityDamageEvent $source){
-		parent::attack($damage, $source);
+		$attack = parent::attack($damage, $source);
 
 		if(!$source->isCancelled()){
 			$pk = new EntityEventPacket();
@@ -81,6 +81,7 @@ class Boat extends Vehicle{
 				$player->dataPacket($pk);
 			}
 		}
+		return $attack;
 	}
 
 	public function onUpdate($currentTick){

@@ -84,8 +84,10 @@ class Item extends Entity{
 			$source->getCause() === EntityDamageEvent::CAUSE_ENTITY_EXPLOSION or
 			$source->getCause() === EntityDamageEvent::CAUSE_BLOCK_EXPLOSION
 		){
-			parent::attack($damage, $source);
+			return parent::attack($damage, $source);
 		}
+
+		return false;
 	}
 
 	public function onUpdate($currentTick){

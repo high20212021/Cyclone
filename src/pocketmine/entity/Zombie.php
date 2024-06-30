@@ -63,7 +63,7 @@ class Zombie extends Monster{
 	}
 	
 	public function attack($damage, EntityDamageEvent $source){
-		parent::attack($damage, $source);
+		$attack = parent::attack($damage, $source);
 		
 		if($source instanceof EntityDamageByEntityEvent){
 			$e = $source->getDamager();
@@ -72,6 +72,7 @@ class Zombie extends Monster{
 			$deltaZ = $this->z - $e->z;
 			$this->knockBack($e, $damage, $deltaX / 100, $deltaZ / 100, $source->getKnockBack());
 		}
+		return $attack;
 	}
 
 	

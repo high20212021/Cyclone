@@ -55,9 +55,9 @@ class Squid extends WaterAnimal implements Ageable{
 	}
 
 	public function attack($damage, EntityDamageEvent $source){
-		parent::attack($damage, $source);
+		$attack = parent::attack($damage, $source);
 		if($source->isCancelled()){
-			return;
+			return false;
 		}
 
 		if($source instanceof EntityDamageByEntityEvent){
@@ -70,6 +70,7 @@ class Squid extends WaterAnimal implements Ageable{
 			$pk->event = EntityEventPacket::SQUID_INK_CLOUD;
 			$this->server->broadcastPacket($this->hasSpawned, $pk);
 		}
+		return $attack;
 	}
 
 	private function generateRandomDirection(){

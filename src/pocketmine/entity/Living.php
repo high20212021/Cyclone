@@ -103,10 +103,10 @@ abstract class Living extends Entity implements Damageable{
 			}
 		}
 
-        parent::attack($damage, $source);
+        $attack = parent::attack($damage, $source);
 
         if($source->isCancelled()){
-            return;
+            return false;
         }
 
 		if($source instanceof EntityDamageByEntityEvent){
@@ -133,6 +133,7 @@ abstract class Living extends Entity implements Damageable{
 		$this->server->broadcastPacket($this->hasSpawned, $pk);
 
 		$this->attackTime = 10; //0.5 seconds cooldown
+		return $attack;
 	}
 
 	public function knockBack(Entity $attacker, $damage, $x, $z, $base = 0.4){
