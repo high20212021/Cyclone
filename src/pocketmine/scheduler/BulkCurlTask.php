@@ -43,8 +43,7 @@ class BulkCurlTask extends AsyncTask{
 	 * @param array      $operations
 	 * @param mixed|null $complexData
 	 */
-	public function __construct(array $operations, $complexData = null){
-		parent::__construct($complexData);
+	public function __construct(array $operations){
 		$this->operations = igbinary_serialize($operations);
 	}
 

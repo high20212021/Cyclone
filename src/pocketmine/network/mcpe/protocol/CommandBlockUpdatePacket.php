@@ -44,8 +44,8 @@ class CommandBlockUpdatePacket extends DataPacket{
 
 	public $shouldTrackOutput;
 
-	public function decode(){
-		$this->isBlock = $this->getBool();
+	public function decode(){ //TODO
+		/*$this->isBlock = $this->getBool();
 
 		if($this->isBlock){
 			$this->getBlockPosition($this->x, $this->y, $this->z);
@@ -61,11 +61,11 @@ class CommandBlockUpdatePacket extends DataPacket{
 		$this->lastOutput = $this->getString();
 		$this->name = $this->getString();
 
-		$this->shouldTrackOutput = $this->getBool();
+		$this->shouldTrackOutput = $this->getBool();*/
 	}
 
 	public function encode(){
-		$this->reset();
+		/*$this->reset();
 		$this->putBool($this->isBlock);
 
 		if($this->isBlock){
@@ -81,7 +81,7 @@ class CommandBlockUpdatePacket extends DataPacket{
 		$this->putString($this->lastOutput);
 		$this->putString($this->name);
 
-		$this->putBool($this->shouldTrackOutput);
+		$this->putBool($this->shouldTrackOutput);*/
 	}
 
 }

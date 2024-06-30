@@ -23,6 +23,7 @@
  * Various Utilities used around the code
  */
 namespace pocketmine\utils;
+use _PHPStan_01e5828ef\Nette\Neon\Exception;
 use pocketmine\ThreadManager;
 
 /**
@@ -472,6 +473,16 @@ class Utils{
 		foreach($array as $key => $value){
 			yield (string)$key => $value;
 		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public static function assumeNotFalse(mixed $value, \Closure|string $context = "This should never be false"): mixed{
+		if($value === false){
+			throw new Exception("Assumption failure: " . (is_string($context) ? $context : $context()) . " (THIS IS A BUG)");
+		}
+		return $value;
 	}
 
 }

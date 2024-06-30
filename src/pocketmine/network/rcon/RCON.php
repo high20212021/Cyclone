@@ -44,6 +44,8 @@ class RCON{
 	private $workers = [];
 	private $clientsPerThread;
 
+	private $threads = 1;
+
 	public function __construct(Server $server, $password, $port = 19132, $interface = "0.0.0.0", $threads = 1, $clientsPerThread = 50){
 		$this->server = $server;
 		$this->workers = [];

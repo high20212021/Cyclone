@@ -24,8 +24,6 @@ namespace pocketmine\network\mcpe\protocol;
 
 #include <rules/DataPacket.h>
 
-use pocketmine\network\protocol\NetworkSession;
-
 class ResourcePackDataInfoPacket extends DataPacket{
 	const NETWORK_ID = Info::RESOURCE_PACK_DATA_INFO_PACKET;
 
@@ -50,10 +48,6 @@ class ResourcePackDataInfoPacket extends DataPacket{
 		$this->putLInt($this->chunkCount);
 		$this->putLLong($this->compressedPackSize);
 		$this->putString($this->sha256);
-	}
-
-	public function handle(NetworkSession $session) : bool{
-		return $session->handleResourcePackDataInfo($this);
 	}
 
 }

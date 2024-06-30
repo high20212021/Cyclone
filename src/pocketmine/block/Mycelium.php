@@ -79,5 +79,6 @@ class Mycelium extends Solid{
 			}
 			return Level::BLOCK_UPDATE_RANDOM;
 		}
+		return false;
 	}
 }

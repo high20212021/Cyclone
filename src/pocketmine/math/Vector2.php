@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\math;
 
+use pocketmine\utils\Random;
 use function abs;
 use function ceil;
 use function floor;

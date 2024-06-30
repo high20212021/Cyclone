@@ -31,6 +31,8 @@ class VersionString{
 	private $minor;
 	private $development = false;
 
+	private $generation;
+
 	public function __construct($version = \pocketmine\VERSION){
 		if(is_int($version)){
 			$this->minor = $version & 0x1F;
