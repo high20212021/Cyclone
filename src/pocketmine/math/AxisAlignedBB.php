@@ -102,6 +102,17 @@ class AxisAlignedBB{
 	}
 
 	/**
+	 * @param $x
+	 * @param $y
+	 * @param $z
+	 *
+	 * @return AxisAlignedBB
+	 */
+	public function grow($x, $y, $z){
+		return new AxisAlignedBB($this->minX - $x, $this->minY - $y, $this->minZ - $z, $this->maxX + $x, $this->maxY + $y, $this->maxZ + $z);
+	}
+
+	/**
 	 * Outsets the bounds of this AxisAlignedBB by the specified X, Y and Z.
 	 *
 	 * @return $this
