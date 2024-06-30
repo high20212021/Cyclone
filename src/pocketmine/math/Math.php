@@ -67,4 +67,8 @@ abstract class Math{
 			return [];
 		}
 	}
+
+	public static function clamp($value, $low, $high){
+		return min($high, max($low, $value));
+	}
 }
