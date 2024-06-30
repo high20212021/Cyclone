@@ -200,6 +200,11 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
 	public $craftingType = self::CRAFTING_SMALL; //0 = 2x2 crafting, 1 = 3x3 crafting, 2 = anvil, 3 = enchanting
 
+	/**
+	 * @var int
+	 * Last measurement of player's latency in milliseconds.
+	 */
+	protected $lastPingMeasure = 1;
 	public $creationTime = 0;
 
 	protected $randomClientId;
@@ -772,6 +777,21 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	 */
 	public function getPort() : int{
 		return $this->port;
+	}
+
+	public function getPing() : int{
+		return $this->lastPingMeasure;
+	}
+
+	/**
+	 * Updates the player's last ping measurement.
+	 *
+	 * @internal Plugins should not use this method.
+	 *
+	 * @return void
+	 */
+	public function updatePing(int $pingMS){
+		$this->lastPingMeasure = $pingMS;
 	}
 
 	public function getNextPosition(){
