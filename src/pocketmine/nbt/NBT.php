@@ -471,7 +471,15 @@ class NBT{
 
 	public function writeCompressed($compression = ZLIB_ENCODING_GZIP, $level = 7){
 		if(($write = $this->write()) !== false){
-			return zlib_encode($write, $compression, $level);
+			switch($compression){
+				case ZLIB_ENCODING_GZIP:
+					return libdeflate_gzip_compress($write, $level);
+				case ZLIB_ENCODING_DEFLATE:
+					return libdeflate_zlib_compress($write, $level);
+				case ZLIB_ENCODING_RAW:
+					return libdeflate_deflate_compress($write, $level);
+			}
+			
 		}
 
 		return false;
@@ -479,7 +487,14 @@ class NBT{
 
 	public function writeNetworkCompressed($compression = ZLIB_ENCODING_GZIP, $level = 7){
 		if(($write = $this->write(true)) !== false){
-			return zlib_encode($write, $compression, $level);
+			switch($compression){
+				case ZLIB_ENCODING_GZIP:
+					return libdeflate_gzip_compress($write, $level);
+				case ZLIB_ENCODING_DEFLATE:
+					return libdeflate_zlib_compress($write, $level);
+				case ZLIB_ENCODING_RAW:
+					return libdeflate_deflate_compress($write, $level);
+			}
 		}
 
 		return false;

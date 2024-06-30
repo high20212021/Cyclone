@@ -122,6 +122,7 @@ class Level implements ChunkManager, Metadatable{
 
 	const Y_MASK = 0xFF;
 	const Y_MAX = 0x100; //256
+	const Y_MIN = 0;
 
 	const BLOCK_UPDATE_NORMAL = 1;
 	const BLOCK_UPDATE_RANDOM = 2;
@@ -138,6 +139,20 @@ class Level implements ChunkManager, Metadatable{
 
 	const DIMENSION_NORMAL = 0;
 	const DIMENSION_NETHER = 1;
+	const DIMENSION_END = 2;
+
+	//morton extensions
+	private const MORTON3D_BIT_SIZE = 21;
+	private const BLOCKHASH_Y_BITS = 9;
+	private const BLOCKHASH_Y_PADDING = 128; //size (in blocks) of padding after both boundaries of the Y axis
+	private const BLOCKHASH_Y_OFFSET = self::BLOCKHASH_Y_PADDING - self::Y_MIN;
+	private const BLOCKHASH_Y_MASK = (1 << self::BLOCKHASH_Y_BITS) - 1;
+	private const BLOCKHASH_XZ_MASK = (1 << self::MORTON3D_BIT_SIZE) - 1;
+	private const BLOCKHASH_XZ_EXTRA_BITS = (self::MORTON3D_BIT_SIZE - self::BLOCKHASH_Y_BITS) >> 1;
+	private const BLOCKHASH_XZ_EXTRA_MASK = (1 << self::BLOCKHASH_XZ_EXTRA_BITS) - 1;
+	private const BLOCKHASH_XZ_SIGN_SHIFT = 64 - self::MORTON3D_BIT_SIZE - self::BLOCKHASH_XZ_EXTRA_BITS;
+	private const BLOCKHASH_X_SHIFT = self::BLOCKHASH_Y_BITS;
+	private const BLOCKHASH_Z_SHIFT = self::BLOCKHASH_X_SHIFT + self::BLOCKHASH_XZ_EXTRA_BITS;
 
 	/** @var Tile[] */
 	private $tiles = [];
@@ -316,36 +331,41 @@ class Level implements ChunkManager, Metadatable{
 	 * @return string
 	 */
 	public static function chunkHash(int $x, int $z){
-		return PHP_INT_SIZE === 8 ? (($x & 0xFFFFFFFF) << 32) | ($z & 0xFFFFFFFF) : $x . ":" . $z;
+		return morton2d_encode($x, $z);
 	}
 
 	public static function blockHash(int $x, int $y, int $z){
-		return PHP_INT_SIZE === 8 ? (($x & 0xFFFFFFF) << 36) | (($y & Level::Y_MASK) << 28) | ($z & 0xFFFFFFF) : $x . ":" . $y . ":" . $z;
+		$shiftedY = $y + self::BLOCKHASH_Y_OFFSET;
+		if(($shiftedY & (~0 << self::BLOCKHASH_Y_BITS)) !== 0){
+			throw new \InvalidArgumentException("Y coordinate $y is out of range!");
+		}
+		//morton3d gives us 21 bits on each axis, but the Y axis only requires 9
+		//so we use the extra space on Y (12 bits) and add 6 extra bits from X and Z instead.
+		//if we ever need more space for Y (e.g. due to expansion), take bits from X/Z to compensate.
+		return morton3d_encode(
+			$x & self::BLOCKHASH_XZ_MASK,
+			($shiftedY /* & self::BLOCKHASH_Y_MASK */) |
+			((($x >> self::MORTON3D_BIT_SIZE) & self::BLOCKHASH_XZ_EXTRA_MASK) << self::BLOCKHASH_X_SHIFT) |
+			((($z >> self::MORTON3D_BIT_SIZE) & self::BLOCKHASH_XZ_EXTRA_MASK) << self::BLOCKHASH_Z_SHIFT),
+			$z & self::BLOCKHASH_XZ_MASK
+		);
 	}
 
 	public static function getBlockXYZ($hash, &$x, &$y, &$z){
-		if(PHP_INT_SIZE === 8){
-			$x = $hash >> 36;
-			$y = ($hash >> 28) & Level::Y_MASK; //it's always positive
-			$z = ($hash & 0xFFFFFFF) << 36 >> 36;
-		}else{
-			$hash = explode(":", $hash);
-			$x = (int) $hash[0];
-			$y = (int) $hash[1];
-			$z = (int) $hash[2];
-		}
+		[$baseX, $baseY, $baseZ] = morton3d_decode($hash);
+
+		$extraX = ((($baseY >> self::BLOCKHASH_X_SHIFT) & self::BLOCKHASH_XZ_EXTRA_MASK) << self::MORTON3D_BIT_SIZE);
+		$extraZ = ((($baseY >> self::BLOCKHASH_Z_SHIFT) & self::BLOCKHASH_XZ_EXTRA_MASK) << self::MORTON3D_BIT_SIZE);
+
+		$x = (($baseX & self::BLOCKHASH_XZ_MASK) | $extraX) << self::BLOCKHASH_XZ_SIGN_SHIFT >> self::BLOCKHASH_XZ_SIGN_SHIFT;
+		$y = ($baseY & self::BLOCKHASH_Y_MASK) - self::BLOCKHASH_Y_OFFSET;
+		$z = (($baseZ & self::BLOCKHASH_XZ_MASK) | $extraZ) << self::BLOCKHASH_XZ_SIGN_SHIFT >> self::BLOCKHASH_XZ_SIGN_SHIFT;
 	}
 
 	public static function getXZ($hash, &$x, &$z){
-		if(PHP_INT_SIZE === 8){
-			$x = $hash >> 32;
-			$z = ($hash & 0xFFFFFFFF) << 32 >> 32;
-		}else{
-			$hash = explode(":", $hash);
-			$x = (int) $hash[0];
-			$z = (int) $hash[1];
-		}
+		[$x, $z] = morton2d_decode($hash);
 	}
+
 
 	public static function generateChunkLoaderId(ChunkLoader $loader) : int{
 		if($loader->getLoaderId() === 0 or $loader->getLoaderId() === null or $loader->getLoaderId() === null){
@@ -3062,7 +3082,7 @@ class Level implements ChunkManager, Metadatable{
 		$pk->encode();
 
 		$batch = new BatchPacket();
-		$batch->payload = zlib_encode(Binary::writeUnsignedVarInt(strlen($pk->getBuffer())) . $pk->getBuffer(), ZLIB_ENCODING_DEFLATE, Server::getInstance()->networkCompressionLevel);
+		$batch->payload = libdeflate_zlib_compress(Binary::writeUnsignedVarInt(strlen($pk->getBuffer())) . $pk->getBuffer(), Server::getInstance()->networkCompressionLevel);
 
 		$batch->encode();
 		$batch->isEncoded = true;

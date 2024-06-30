@@ -34,13 +34,13 @@ class CompressBatchedTask extends AsyncTask{
 
 	public function __construct($data, array $targets, $level = 7){
 		$this->data = $data;
-		$this->targets = serialize($targets);
+		$this->targets = igbinary_serialize($targets);
 		$this->level = $level;
 	}
 
 	public function onRun(){
 		try{
-			$this->final = zlib_encode($this->data, ZLIB_ENCODING_DEFLATE, $this->level);
+			$this->final = libdeflate_zlib_compress($this->data, $this->level);
 			$this->data = null;
 		}catch(\Throwable $e){
 
@@ -48,6 +48,6 @@ class CompressBatchedTask extends AsyncTask{
 	}
 
 	public function onCompletion(Server $server){
-		$server->broadcastPacketsCallback($this->final, unserialize($this->targets));
+		$server->broadcastPacketsCallback($this->final, igbinary_unserialize($this->targets));
 	}
 }

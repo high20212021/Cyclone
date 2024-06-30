@@ -45,11 +45,11 @@ class BulkCurlTask extends AsyncTask{
 	 */
 	public function __construct(array $operations, $complexData = null){
 		parent::__construct($complexData);
-		$this->operations = serialize($operations);
+		$this->operations = igbinary_serialize($operations);
 	}
 
 	public function onRun(){
-		$operations = unserialize($this->operations);
+		$operations = igbinary_unserialize($this->operations);
 		$results = [];
 		foreach($operations as $op){
 			try{

@@ -86,7 +86,7 @@ abstract class AsyncTask extends \Threaded implements \Collectable{
 	 * @return mixed
 	 */
 	public function getResult(){
-		return $this->serialized ? unserialize($this->result) : $this->result;
+		return $this->serialized ? igbinary_unserialize($this->result) : $this->result;
 	}
 
 	public function cancelRun(){
@@ -109,7 +109,7 @@ abstract class AsyncTask extends \Threaded implements \Collectable{
 	 * @param bool  $serialize
 	 */
 	public function setResult($result, $serialize = true){
-		$this->result = $serialize ? serialize($result) : $result;
+		$this->result = $serialize ? igbinary_serialize($result) : $result;
 		$this->serialized = $serialize;
 	}
 

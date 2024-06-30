@@ -428,6 +428,21 @@ namespace pocketmine {
 		++$errors;
 	}
 
+	if(!extension_loaded("igbinary")){
+		$logger->critical("Unable to find the igbinary extension.");
+		++$errors;
+	}
+
+	if(!extension_loaded("libdeflate")){
+		$logger->critical("Unable to find the libdeflate extension.");
+		++$errors;
+	}
+
+	if(!extension_loaded("morton")){
+		$logger->critical("Unable to find the morton extension.");
+		++$errors;
+	}
+
 	if($errors > 0){
 		$logger->critical("Please update your PHP from itxtech.org/genisys/get/, or recompile PHP again.");
 		$logger->shutdown();

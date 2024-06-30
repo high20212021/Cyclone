@@ -971,7 +971,7 @@ class Chunk{
 	 * @return int
 	 */
 	public static function chunkBlockHash(int $x, int $y, int $z) : int{
-		return ($x << 12) | ($z << 8) | $y;
+		return morton3d_encode($x, $y, $z);
 	}
 
 }

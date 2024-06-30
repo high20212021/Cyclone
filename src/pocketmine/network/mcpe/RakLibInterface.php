@@ -201,7 +201,7 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 
 	public function handleOption($name, $value){
 		if($name === "bandwidth"){
-			$v = unserialize($value);
+			$v = igbinary_unserialize($value);
 			$this->network->addStatistics($v["up"], $v["down"]);
 		}
 	}
