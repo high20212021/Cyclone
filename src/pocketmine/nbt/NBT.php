@@ -307,7 +307,7 @@ class NBT{
 
 	public function getInt(bool $network = false){
 		if($network === true){
-			return Binary::readVarInt($this);
+			return Binary::readVarInt($this, $this->offset);
 		}
 		return $this->endianness === self::BIG_ENDIAN ? Binary::readInt($this->get(4)) : Binary::readLInt($this->get(4));
 	}
@@ -345,7 +345,7 @@ class NBT{
 	}
 
 	public function getString(bool $network = false){
-		$len = $network ? Binary::readUnsignedVarInt($this) : $this->getShort();
+		$len = $network ? Binary::readUnsignedVarInt($this, $this->offset) : $this->getShort();
 		return $this->get($len);
 	}
 

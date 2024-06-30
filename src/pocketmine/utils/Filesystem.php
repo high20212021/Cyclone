@@ -141,7 +141,7 @@ final class Filesystem{
 		}else{
 			$dirName = dirname($destination);
 			if(!is_dir($dirName)){ //the destination folder should already exist
-				throw new AssumptionFailedError("The destination folder should have been created in the parent call");
+				throw new \Exception("The destination folder should have been created in the parent call");
 			}
 			copy($origin, $destination);
 		}

@@ -23,7 +23,6 @@
  * Various Utilities used around the code
  */
 namespace pocketmine\utils;
-use _PHPStan_01e5828ef\Nette\Neon\Exception;
 use pocketmine\ThreadManager;
 
 /**
@@ -480,9 +479,28 @@ class Utils{
 	 */
 	public static function assumeNotFalse(mixed $value, \Closure|string $context = "This should never be false"): mixed{
 		if($value === false){
-			throw new Exception("Assumption failure: " . (is_string($context) ? $context : $context()) . " (THIS IS A BUG)");
+			throw new \Exception("Assumption failure: " . (is_string($context) ? $context : $context()) . " (THIS IS A BUG)");
 		}
 		return $value;
+	}
+
+	public static function javaStringHash($string){
+		$hash = 0;
+		for($i = 0; $i < strlen($string); $i++){
+			$ord = ord($string[$i]);
+			if($ord & 0x80){
+				$ord -= 0x100;
+			}
+			$hash = 31 * $hash + $ord;
+			while($hash > 0x7FFFFFFF){
+				$hash -= 0x100000000;
+			}
+			while($hash < -0x80000000){
+				$hash += 0x100000000;
+			}
+			$hash &= 0xFFFFFFFF;
+		}
+		return $hash;
 	}
 
 }
