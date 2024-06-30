@@ -442,6 +442,10 @@ class Block extends Position implements BlockIds, Metadatable{
 		return $this->getHardness() * 5;
 	}
 
+	public function getBlastResistance(){
+		return $this->getResistance();
+	}
+
 	/**
 	 * @return int
 	 */
