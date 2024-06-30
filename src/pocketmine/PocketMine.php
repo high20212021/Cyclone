@@ -74,7 +74,7 @@ namespace pocketmine {
 	use pocketmine\wizard\Installer;
 
 	const VERSION = "0.0.1b";
-	const API_VERSION = "3.0.0-ALPHA5";
+	const API_VERSION = "3.0.0-ALPHA6";
 	const CODENAME = "Enopoio";
 	const GENISYS_API_VERSION = '2.0.0';
 
