@@ -48,6 +48,10 @@ class Vine extends Transparent{
 		return 0.2;
 	}
 
+	public function canClimb() : bool{
+		return true;
+	}
+
 	public function canPassThrough(){
 		return true;
 	}

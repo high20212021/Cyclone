@@ -87,7 +87,7 @@ class RCON{
 
 		$u = Utils::getMemoryUsage(true);
 		$usage = round(($u[0] / 1024) / 1024, 2) . "/" . round(($d[0] / 1024) / 1024, 2) . "/" . round(($u[1] / 1024) / 1024, 2) . "/" . round(($u[2] / 1024) / 1024, 2) . " MB @ " . Utils::getThreadCount() . " threads";
-		$serverStatus = serialize([
+		$serverStatus = igbinary_serialize([
 			"online" => count($this->server->getOnlinePlayers()),
 			"max" => $this->server->getMaxPlayers(),
 			"upload" => round($this->server->getNetwork()->getUpload() / 1024, 2),

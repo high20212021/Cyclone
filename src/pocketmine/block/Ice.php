@@ -61,4 +61,8 @@ class Ice extends Transparent{
 			return [];
 		}
 	}
+
+	public function getLightFilter() : int{
+		return 2;
+	}
 }

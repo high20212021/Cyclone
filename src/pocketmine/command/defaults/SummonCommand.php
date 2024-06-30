@@ -24,6 +24,7 @@ namespace pocketmine\command\defaults;
 use pocketmine\command\CommandSender;
 use pocketmine\entity\Entity;
 use pocketmine\event\TranslationContainer;
+use pocketmine\nbt\JsonNBTParser;
 use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
@@ -139,7 +140,7 @@ class SummonCommand extends VanillaCommand{
 			]),
 		]);
 		if(count($args) == 5 and $args[4][0] == "{"){//Tags are found
-			$nbtExtra = NBT::parseJSON($args[4]);
+			$nbtExtra = JsonNBTParser::parseJSON($args[4]);
 			$nbt = NBT::combineCompoundTags($nbt, $nbtExtra, true);
 		}
 

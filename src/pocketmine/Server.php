@@ -33,6 +33,7 @@ use pocketmine\entity\Entity;
 use pocketmine\event\HandlerList;
 use pocketmine\event\level\LevelInitEvent;
 use pocketmine\event\level\LevelLoadEvent;
+use pocketmine\event\player\PlayerDataSaveEvent;
 use pocketmine\event\server\QueryRegenerateEvent;
 use pocketmine\event\server\ServerCommandEvent;
 use pocketmine\event\Timings;
@@ -861,8 +862,6 @@ class Server{
 		$nbt->Motion->setTagType(NBT::TAG_Double);
 		$nbt->Rotation->setTagType(NBT::TAG_Float);
 
-		$this->saveOfflinePlayerData($name, $nbt);
-
 		return $nbt;
 
 	}
@@ -874,18 +873,25 @@ class Server{
 	 */
 	public function saveOfflinePlayerData($name, CompoundTag $nbtTag, $async = false){
 		if($this->shouldSavePlayerData()){
-			$nbt = new NBT(NBT::BIG_ENDIAN);
-			try{
-				$nbt->setData($nbtTag);
+			$ev = new PlayerDataSaveEvent($nbtTag, $name);
+			$ev->setCancelled(!$this->shouldSavePlayerData());
 
-				if($async){
-					$this->getScheduler()->scheduleAsyncTask(new FileWriteTask($this->getDataPath() . "players/" . strtolower($name) . ".dat", $nbt->writeCompressed()));
-				}else{
-					file_put_contents($this->getDataPath() . "players/" . strtolower($name) . ".dat", $nbt->writeCompressed());
+			$this->pluginManager->callEvent($ev);
+
+			if(!$ev->isCancelled()){
+				$nbt = new NBT(NBT::BIG_ENDIAN);
+				try{
+					$nbt->setData($ev->getSaveData());
+
+					if($async){
+						$this->getScheduler()->scheduleAsyncTask(new FileWriteTask($this->getDataPath() . "players/" . strtolower($name) . ".dat", $nbt->writeCompressed()));
+					}else{
+						file_put_contents($this->getDataPath() . "players/" . strtolower($name) . ".dat", $nbt->writeCompressed());
+					}
+				}catch(\Throwable $e){
+					$this->logger->critical($this->getLanguage()->translateString("pocketmine.data.saveError", [$name, $e->getMessage()]));
+					$this->logger->logException($e);
 				}
-			}catch(\Throwable $e){
-				$this->logger->critical($this->getLanguage()->translateString("pocketmine.data.saveError", [$name, $e->getMessage()]));
-				$this->logger->logException($e);
 			}
 		}
 	}
@@ -2039,7 +2045,7 @@ class Server{
 			$task = new CompressBatchedTask($str, $targets, $this->networkCompressionLevel);
 			$this->getScheduler()->scheduleAsyncTask($task);
 		}else{
-			$this->broadcastPacketsCallback(zlib_encode($str, ZLIB_ENCODING_DEFLATE, $this->networkCompressionLevel), $targets);
+			$this->broadcastPacketsCallback(libdeflate_zlib_compress($str, $this->networkCompressionLevel), $targets);
 		}
 
 		Timings::$playerNetworkTimer->stopTiming();

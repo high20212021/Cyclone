@@ -186,4 +186,8 @@ class Leaves extends Transparent{
 		}
 		return $drops;
 	}
+
+	public function diffusesSkyLight() : bool{
+		return true;
+	}
 }

@@ -156,10 +156,10 @@ class RCONInstance extends Thread{
 									continue;
 								}
 								$res = (array) [
-									"serverStatus" => unserialize($this->serverStatus),
+									"serverStatus" => igbinary_unserialize($this->serverStatus),
 									"logger" => str_replace("\n", "\r\n", trim($this->logger->getMessages()))
 								];
-								$this->writePacket($client, $requestID, 0, serialize($res));
+								$this->writePacket($client, $requestID, 0, igbinary_serialize($res));
 								$this->response = "";
 								break;
 							case 3: //Login

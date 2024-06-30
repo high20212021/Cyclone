@@ -57,7 +57,7 @@ class Location extends Position{
 		return new Location($pos->x, $pos->y, $pos->z, $yaw, $pitch, ($level === null) ? (($pos instanceof Position) ? $pos->level : null) : $level);
 	}
 
-	public function add($x, $y = 0, $z = 0, $yaw = 0, $pitch = 0){
+	public function add($x, $y = 0, $z = 0, $yaw = 0, $pitch = 0): Vector3{
 		if($x instanceof Location){
 			return new Location($this->x + $x->x, $this->y + $x->y, $this->z + $x->z, $this->yaw + $x->yaw, $this->pitch + $x->pitch, $this->level);
 		}else{

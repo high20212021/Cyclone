@@ -129,7 +129,7 @@ class SessionManager{
 
 		if(($this->ticks & 0b1111) === 0){
 			$diff = max(0.005, $time - $this->lastMeasure);
-			$this->streamOption("bandwidth", serialize([
+			$this->streamOption("bandwidth", igbinary_serialize([
 				"up" => $this->sendBytes / $diff,
 				"down" => $this->receiveBytes / $diff
 			]));
