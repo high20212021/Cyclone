@@ -1648,7 +1648,7 @@ class Server{
 				}
 				@file_put_contents($this->dataPath . "genisys.yml", $content);
 			}
-			$internelConfig = new Config($file, Config::YAML, []);
+			$internelConfig = new Config($this->filePath . "src/pocketmine/resources/genisys_eng.yml", Config::YAML, []);
 			$this->advancedConfig = new Config($this->dataPath . "genisys.yml", Config::YAML, []);
 			$cfgVer = $this->getAdvancedProperty("config.version", 0, $internelConfig);
 			$advVer = $this->getAdvancedProperty("config.version", 0);
@@ -1692,7 +1692,7 @@ class Server{
 				$processors = Utils::getCoreCount() - 2;
 
 				if($processors > 0){
-					$poolSize = max(1, $processors);
+					$poolSize = max(2, $processors * 4); //faster chunk sending
 				}
 			}
 
