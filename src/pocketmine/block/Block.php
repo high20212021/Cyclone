@@ -570,6 +570,7 @@ class Block extends Position implements BlockIds, Metadatable{
 
 	/**
 	 * AKA: Block->isActivable
+	 * @deprecated
 	 *
 	 * @return bool
 	 */

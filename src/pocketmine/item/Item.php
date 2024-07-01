@@ -82,6 +82,10 @@ class Item implements ItemIds, \JsonSerializable{
 	protected $durability = 0;
 	protected $name;
 
+	/**
+	 * @deprecated
+	 * @return bool
+	 */
 	public function canBeActivated() :bool{
 		return false;
 	}
