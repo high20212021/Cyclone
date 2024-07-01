@@ -90,7 +90,6 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
             $this->sleeper
         );
         $this->interface = new ServerHandler($this->rakLib, $this);
-        $this->start();
     }
 
     public function start(){
