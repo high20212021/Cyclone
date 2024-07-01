@@ -763,6 +763,11 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 		}
 	}
 
+	public function jump(){
+		$this->server->getPluginManager()->callEvent(new PlayerJumpEvent($this));
+		parent::jump();
+	}
+
 	/**
 	 * Gets the player IP address
 	 *
@@ -2730,7 +2735,8 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 						$this->scheduleUpdate();
 						break;
 					case PlayerActionPacket::ACTION_JUMP:
-						break 2;
+						$this->jump();
+						return true;
 					case PlayerActionPacket::ACTION_START_SPRINT:
 						$ev = new PlayerToggleSprintEvent($this, true);
 						$this->server->getPluginManager()->callEvent($ev);
