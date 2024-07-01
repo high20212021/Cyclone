@@ -1612,12 +1612,23 @@ class Server{
 			$this->logger->info($aboutstring);
 
 			$this->logger->info("Loading properties and configuration...");
+
 			if(!file_exists($this->dataPath . "pocketmine.yml")){
-				$content = file_get_contents($this->filePath . "src/pocketmine/resources/pocketmine.yml");
+				if(file_exists($this->filePath . "src/pocketmine/resources/pocketmine_$defaultLang.yml")){
+					$content = file_get_contents($file = $this->filePath . "src/pocketmine/resources/pocketmine_$defaultLang.yml");
+				}else{
+					$content = file_get_contents($file = $this->filePath . "src/pocketmine/resources/pocketmine_eng.yml");
+				}
 				@file_put_contents($this->dataPath . "pocketmine.yml", $content);
 			}
 			$this->config = new Config($configPath = $this->dataPath . "pocketmine.yml", Config::YAML, []);
+
 			$nowLang = $this->getProperty("settings.language", "eng");
+			if($defaultLang != "unknown" and $nowLang != $defaultLang){
+				@file_put_contents($configPath, str_replace('language: "' . $nowLang . '"', 'language: "' . $defaultLang . '"', file_get_contents($configPath)));
+				$this->config->reload();
+				unset($this->propertyCache["settings.language"]);
+			}
 
 			//Crashes unsupported builds without the correct configuration
 			if(strpos(\pocketmine\VERSION, "unsupported") !== false and getenv("GITLAB_CI") === false){
@@ -1627,20 +1638,14 @@ class Server{
 					$this->logger->warning("You are using an unsupported build. Do not use this build in a production environment.");
 				}
 			}
-			if($defaultLang != "unknown" and $nowLang != $defaultLang){
-				@file_put_contents($configPath, str_replace('language: "' . $nowLang . '"', 'language: "' . $defaultLang . '"', file_get_contents($configPath)));
-				$this->config->reload();
-				unset($this->propertyCache["settings.language"]);
-			}
-
-			$lang = $this->getProperty("settings.language", BaseLang::FALLBACK_LANGUAGE);
-			if(file_exists($this->filePath . "src/pocketmine/resources/genisys_$lang.yml")){
-				$content = file_get_contents($file = $this->filePath . "src/pocketmine/resources/genisys_$lang.yml");
-			}else{
-				$content = file_get_contents($file = $this->filePath . "src/pocketmine/resources/genisys_eng.yml");
-			}
 
 			if(!file_exists($this->dataPath . "genisys.yml")){
+				$lang = $this->getProperty("settings.language", BaseLang::FALLBACK_LANGUAGE);
+				if(file_exists($this->filePath . "src/pocketmine/resources/genisys_$lang.yml")){
+					$content = file_get_contents($file = $this->filePath . "src/pocketmine/resources/genisys_$lang.yml");
+				}else{
+					$content = file_get_contents($file = $this->filePath . "src/pocketmine/resources/genisys_eng.yml");
+				}
 				@file_put_contents($this->dataPath . "genisys.yml", $content);
 			}
 			$internelConfig = new Config($file, Config::YAML, []);

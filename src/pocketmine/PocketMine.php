@@ -470,6 +470,8 @@ namespace pocketmine {
 	@define("INT32_MASK", is_int(0xffffffff) ? 0xffffffff : -1);
 	@ini_set("opcache.mmap_base", bin2hex(random_bytes(8))); //Fix OPCache address errors
 
+	$lang = "unknown";
+
 	if(!file_exists(\pocketmine\DATA . "server.properties") and !isset($opts["no-wizard"])){
 		$installer = new Installer();
 		if(!$installer->run()){
@@ -477,6 +479,7 @@ namespace pocketmine {
 			$logger->join();
 			exit(-1);
 		}
+		$lang = $installer->getDefaultLang();
 	}
 
 	if(\Phar::running(true) === ""){
@@ -484,7 +487,7 @@ namespace pocketmine {
 	}
 
 	ThreadManager::init();
-	new Server($autoloader, $logger, \pocketmine\PATH, \pocketmine\DATA, \pocketmine\PLUGIN_PATH);
+	new Server($autoloader, $logger, \pocketmine\PATH, \pocketmine\DATA, \pocketmine\PLUGIN_PATH, $lang);
 
 	$logger->info("Stopping other threads");
 
