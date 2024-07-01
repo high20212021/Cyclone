@@ -19,19 +19,25 @@
  *
 */
 
-namespace pocketmine\command;
+declare(strict_types=1);
 
+namespace pocketmine\event\player;
 
-interface CommandExecutor{
+use pocketmine\Player;
+
+/**
+ * Called when a player jumps
+ */
+class PlayerJumpEvent extends PlayerEvent{
+	public static $handlerList = null;
 
 	/**
-	 * @param CommandSender $sender
-	 * @param Command       $command
-	 * @param string $label
-	 * @param string[]      $args
+	 * PlayerJumpEvent constructor.
 	 *
-	 * @return bool
+	 * @param Player $player
 	 */
-	public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool;
+	public function __construct(Player $player){
+		$this->player = $player;
+	}
 
 }

@@ -19,19 +19,27 @@
  *
 */
 
-namespace pocketmine\command;
+declare(strict_types=1);
 
+namespace pocketmine\event\server;
 
-interface CommandExecutor{
+use pocketmine\network\SourceInterface;
+
+class NetworkInterfaceEvent extends ServerEvent{
+	/** @var SourceInterface */
+	protected $interface;
 
 	/**
-	 * @param CommandSender $sender
-	 * @param Command       $command
-	 * @param string $label
-	 * @param string[]      $args
-	 *
-	 * @return bool
+	 * @param SourceInterface $interface
 	 */
-	public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool;
+	public function __construct(SourceInterface $interface){
+		$this->interface = $interface;
+	}
 
+	/**
+	 * @return SourceInterface
+	 */
+	public function getInterface() : SourceInterface{
+		return $this->interface;
+	}
 }

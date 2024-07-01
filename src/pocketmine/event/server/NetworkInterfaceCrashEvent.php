@@ -19,19 +19,32 @@
  *
 */
 
-namespace pocketmine\command;
+declare(strict_types=1);
 
+namespace pocketmine\event\server;
 
-interface CommandExecutor{
+use pocketmine\network\SourceInterface;
+
+/**
+ * Called when a network interface crashes, with relevant crash information.
+ */
+class NetworkInterfaceCrashEvent extends NetworkInterfaceEvent{
+	public static $handlerList = null;
 
 	/**
-	 * @param CommandSender $sender
-	 * @param Command       $command
-	 * @param string $label
-	 * @param string[]      $args
-	 *
-	 * @return bool
+	 * @var \Throwable
 	 */
-	public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool;
+	private $exception;
 
+	public function __construct(SourceInterface $interface, \Throwable $throwable){
+		parent::__construct($interface);
+		$this->exception = $throwable;
+	}
+
+	/**
+	 * @return \Throwable
+	 */
+	public function getCrashInformation() : \Throwable{
+		return $this->exception;
+	}
 }

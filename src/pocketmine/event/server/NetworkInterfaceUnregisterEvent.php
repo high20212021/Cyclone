@@ -19,19 +19,14 @@
  *
 */
 
-namespace pocketmine\command;
+declare(strict_types=1);
 
+namespace pocketmine\event\server;
 
-interface CommandExecutor{
-
-	/**
-	 * @param CommandSender $sender
-	 * @param Command       $command
-	 * @param string $label
-	 * @param string[]      $args
-	 *
-	 * @return bool
-	 */
-	public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool;
+/**
+ * Called when a network interface is unregistered
+ */
+class NetworkInterfaceUnregisterEvent extends NetworkInterfaceEvent{
+	public static $handlerList = null;
 
 }

@@ -19,19 +19,17 @@
  *
 */
 
-namespace pocketmine\command;
+declare(strict_types=1);
 
+namespace pocketmine\event\server;
 
-interface CommandExecutor{
+use pocketmine\event\Cancellable;
+use pocketmine\network\SourceInterface;
 
-	/**
-	 * @param CommandSender $sender
-	 * @param Command       $command
-	 * @param string $label
-	 * @param string[]      $args
-	 *
-	 * @return bool
-	 */
-	public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool;
+/**
+ * Called when a network interface is registered into the network, for example the RakLib interface.
+ */
+class NetworkInterfaceRegisterEvent extends NetworkInterfaceEvent implements Cancellable{
+	public static $handlerList = null;
 
 }
