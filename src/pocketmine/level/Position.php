@@ -140,4 +140,11 @@ class Position extends Vector3{
 		return $this;
 	}
 
+	public function equals(Vector3 $v): bool{
+		if($v instanceof Position){
+			return parent::equals($v) and $v->getLevel() === $this->getLevel();
+		}
+		return parent::equals($v);
+	}
+
 }

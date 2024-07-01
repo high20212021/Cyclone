@@ -516,6 +516,27 @@ class Item implements ItemIds, \JsonSerializable{
 	}
 
 	/**
+	 * @param int $id
+	 * @param int $level
+	 */
+	public function removeEnchantment(int $id, int $level = -1){
+		if(!$this->hasEnchantments()){
+			return;
+		}
+
+		$tag = $this->getNamedTag();
+		foreach($tag->ench as $k => $entry){
+			if($entry["id"] === $id){
+				if($level === -1 or $entry["lvl"] === $level){
+					unset($tag->ench[$k]);
+					break;
+				}
+			}
+		}
+		$this->setNamedTag($tag);
+	}
+
+	/**
 	 * @param int  $id
 	 * @param int  $level
 	 * @param bool $compareLevel
