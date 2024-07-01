@@ -247,7 +247,7 @@ class BinaryStream extends \stdClass{
 	 * Reads an unsigned varint32 from the stream.
 	 */
 	public function getUnsignedVarInt(){
-		return Binary::readUnsignedVarInt($this, $this->offset);
+		return Binary::readUnsignedVarInt($this->buffer, $this->offset);
 	}
 
 	/**
@@ -261,7 +261,7 @@ class BinaryStream extends \stdClass{
 	 * Reads a signed varint32 from the stream.
 	 */
 	public function getVarInt(){
-		return Binary::readVarInt($this, $this->offset);
+		return Binary::readVarInt($this->buffer, $this->offset);
 	}
 
 	/**

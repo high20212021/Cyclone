@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a27b94458048e4e0691ab0db90fa4343",
+    "content-hash": "d224345986a21209a40d1531a3e52a97",
     "packages": [
         {
             "name": "pocketmine/classloader",
@@ -548,6 +548,7 @@
     "platform": {
         "php": "^8.1",
         "php-64bit": "*",
+        "ext-curl": "*",
         "ext-igbinary": "^3.0.1",
         "ext-json": "*",
         "ext-mbstring": "*",

@@ -51,7 +51,7 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
      */
     private const MCPE_RAKNET_PROTOCOL_VERSION = 8;
 
-    private const MCPE_RAKNET_PACKET_ID = "\x8e";
+    private const MCPE_RAKNET_PACKET_ID = "\xfe";
 
     /** @var Server */
     private $server;
