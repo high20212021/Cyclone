@@ -82,7 +82,7 @@ network:
  #批量处理数据包时的压缩级别。更高级别 = 更多 CPU 占用，更低级别 = 更多带宽占用
  compression-level: 2
  #使用异步任务进行压缩。将会导致额外 0.5~1 刻的延迟，降低主线程的 CPU 占用
- async-compression: true
+ async-compression: false
  #实验性功能，仅适用于 Windows。尝试使用 UPnP 进行自动端口转发
  upnp-forwarding: false
 
@@ -121,14 +121,14 @@ level-settings:
 
 chunk-sending:
  #每游戏刻发送给玩家的区块数量
- per-tick: 4
+ per-tick: 8
  #每个玩家周围发送的区块半径
  max-radius: 4
  #为提高区块发送速度，在内存中保存一份区块的序列副本
  #适合在几乎静止、但在同一时间有许多玩家加入的世界使用
- cache-chunks: false
+ cache-chunks: true
  #是否启用异步方式打包,发送区块
- async-chunk-request: false
+ async-chunk-request: true
 
 chunk-ticking:
  #每游戏刻处理的区块数量上限
@@ -143,9 +143,9 @@ chunk-ticking:
 
 chunk-generation:
  #等待生成的区块队列的最大长度
- queue-size: 2
+ queue-size: 16
  #等待填充的区块队列的最大长度
- population-queue-size: 2
+ population-queue-size: 16
 
 ticks-per:
  animal-spawns: 400

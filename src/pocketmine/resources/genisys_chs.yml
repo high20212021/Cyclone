@@ -25,7 +25,7 @@ player:
     #是否开启死亡不掉落
     keep-inventory: false
     #是否开启切换模式自动清除背包
-    auto-clear-inventory: true
+    auto-clear-inventory: false
     #是否开启死亡经验不掉落
     keep-experience: false
     #如果玩家进入游戏时崩溃, 请设置低于10的值. 禁用 = -1
@@ -55,7 +55,7 @@ server:
     #是否进行移动检测(不再拉回了)
     check-movement: true
     #是否限制创造某些功能(禁止丢物品, 禁止操作箱子等等)
-    limited-creative: true
+    limited-creative: false
     #是否开启方块破坏粒子
     destroy-block-particle: true
     #是否允许喷溅型药水
