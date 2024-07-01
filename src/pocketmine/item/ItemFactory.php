@@ -38,33 +38,7 @@ class ItemFactory{
 	 * @throws \TypeError
 	 */
 	public static function get(int $id, int $meta = 0, int $count = 1, $tags = "") : Item{
-		if(!is_string($tags) and !($tags instanceof CompoundTag)){
-			throw new \TypeError("`tags` argument must be a string or CompoundTag instance, " . (is_object($tags) ? "instance of " . get_class($tags) : gettype($tags)) . " given");
-		}
-
-		$item = null;
-		try{
-			if($id < 256){
-				/* Blocks must have a damage value 0-15, but items can have damage value -1 to indicate that they are
-				 * crafting ingredients with any-damage. */
-				$item = new ItemBlock(BlockFactory::get($id, $meta !== -1 ? $meta : 0), $meta);
-			}else{
-				/** @var Item|null $listed */
-				$listed = Item::$list[$id];
-				if($listed !== null){
-					$item = clone $listed;
-				}
-			}
-		}catch(\RuntimeException $e){
-			throw new \InvalidArgumentException("Item ID $id is invalid or out of bounds");
-		}
-
-		$item = ($item ?? new Item($id, $meta));
-
-		$item->setDamage($meta);
-		$item->setCount($count);
-		$item->setCompoundTag($tags);
-		return $item;
+		return Item::get($id,  $meta, $count, $tags);
 	}
 
 	/**

@@ -37,28 +37,7 @@ class BlockFactory{
 	 * @return Block
 	 */
 	public static function get(int $id, int $meta = 0, Position $pos = null) : Block{
-		if($meta < 0 or $meta > 0xf){
-			throw new \InvalidArgumentException("Block meta value $meta is out of bounds");
-		}
-
-		try{
-			if(Block::$fullList !== null){
-				$block = clone Block::$fullList[($id << 4) | $meta];
-			}else{
-				$block = new UnknownBlock($id, $meta);
-			}
-		}catch(\RuntimeException $e){
-			throw new \InvalidArgumentException("Block ID $id is out of bounds");
-		}
-
-		if($pos !== null){
-			$block->x = $pos->x;
-			$block->y = $pos->y;
-			$block->z = $pos->z;
-			$block->level = $pos->level;
-		}
-
-		return $block;
+		return Block::get($id, $meta, $pos);
 	}
 
 	/**
